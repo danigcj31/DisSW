@@ -79,46 +79,51 @@ $(document).ready(function() {
 });
 
 function login() {
-	var request = new XMLHttpRequest();
-	request.open("post", "jsps/login.jsp");
-	request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	request.onreadystatechange = function() {
-		if (request.readyState == 4) {
-			var resultado = JSON.parse(request.responseText);
-			if (resultado.type=="OK") {
-				$("#logout").show();
-				alert("OK");
-			} else {
-				alert(resultado.message);
-			}
+	var info = {
+		type : "Login",
+		userName : $("#loginUserName").val(),
+		pwd : $("#loginPwd").val()
+	};
+	
+	var data = {
+		data : JSON.stringify(info),
+		url : "jsps/login.jsp",
+		type : "post",
+		contentType: 'application/json',
+		dataType : 'json',
+		success : function() {
+			alert("OK");
+			$("#logout").show();
+		},
+		error : function(response) {
+			alert(response.message);
 		}
 	};
-	var p = "userName=" + loginUserName.value + "&pwd=" + loginPwd.value;
-	request.send(p);
+	$.ajax(data);
 }
 
 function register() {
-	var request = new XMLHttpRequest();
-	request.open("post", "jsps/register.jsp");
-	request.setRequestHeader("Content-Type", "application/json");
-	request.onreadystatechange = function() {
-		if (request.readyState == 4) {
-			var resultado = JSON.parse(request.responseText);
-			if (resultado.type=="OK") {
-				alert("OK");
-			} else {
-				alert(resultado.message);
-			}
-		}
-	};
-	var p = {
+	var info = {
 		type : "Register",
 		userName : registroUserName.value,
 		email : registroEmail.value,
 		pwd1 : pwd1.value,
 		pwd2 : pwd2.value
 	};
-	request.send(JSON.stringify(p));
+	var data = {
+			data : JSON.stringify(info),
+			url : "jsps/register.jsp",
+			type : "post",
+			contentType: 'application/json',
+			dataType : 'json',
+			success : function() {
+				alert("OK");
+			},
+			error : function(response) {
+				alert(response.responseText);
+			}
+		};
+		$.ajax(data);
 }
 
 function requestToken() {
@@ -126,10 +131,9 @@ function requestToken() {
 }
 
 function logout() {
-	var request = new XMLHttpRequest();
-	request.open("get", "jsps/logout.jsp");
-	request.send();
-	$("#logout").hide();
+	$.get("jsps/logout.jsp", function() {
+		$("#logout").hide();
+	});
 }
 </script>
 

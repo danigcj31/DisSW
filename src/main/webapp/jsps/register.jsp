@@ -26,10 +26,12 @@ try {
 		String userName=jso.getString("userName");
 		String pwd1=jso.getString("pwd1");
 		String pwd2=jso.getString("pwd2");
-		if (pwd1.equals("pwd2"))
-			throw new Exception("Las passwords no coinciden");
-		Manager.get().register(email, userName, pwd1);
-		resultado.put("type", "OK");
+		if (!pwd1.equals("pwd2")) {
+			response.sendError(HttpServletResponse.SC_CONFLICT, "Las passwords no coinciden");
+		} else {
+			Manager.get().register(email, userName, pwd1);
+			resultado.put("type", "OK");
+		}
 	}
 }
 catch (Exception e) {

@@ -23,4 +23,3 @@ catch (Exception e) {
 
 <%= resultado.toString() %>
 
-<%= resultado.toString() %>
