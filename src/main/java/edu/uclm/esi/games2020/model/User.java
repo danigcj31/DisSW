@@ -22,14 +22,6 @@ public class User {
 		this.email = email;
 	}
 
-	public static User insert(String email, String userName, String pwd) throws Exception {
-		User player=new User();
-		player.setEmail(email);
-		player.setUserName(userName);
-		UserDAO.insert(player, pwd);
-		return player;
-	}
-
 	public static User identify(String userName, String pwd) throws Exception {
 		return UserDAO.identify(userName, pwd);
 	}
