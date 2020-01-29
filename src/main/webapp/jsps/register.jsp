@@ -26,7 +26,7 @@ try {
 		String userName=jso.getString("userName");
 		String pwd1=jso.getString("pwd1");
 		String pwd2=jso.getString("pwd2");
-		if (pwd1.equals("pwd2"))
+		if (!pwd1.equals(pwd2))
 			throw new Exception("Las passwords no coinciden");
 		Manager.get().register(email, userName, pwd1);
 		resultado.put("type", "OK");
