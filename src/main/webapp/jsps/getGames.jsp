@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="application/json; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="org.json.*, edu.uclm.esi.web.Manager" %>
+<%@ page import="org.json.*, edu.uclm.esi.games2020.model.Manager" %>
 
 <%
 String p=request.getParameter("p");
