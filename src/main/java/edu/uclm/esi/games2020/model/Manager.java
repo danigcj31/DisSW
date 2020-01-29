@@ -3,12 +3,20 @@ package edu.uclm.esi.games2020.model;
 import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.json.JSONArray;
+
 import edu.uclm.esi.games2020.dao.UserDAO;
 import edu.uclm.esi.games2020.model.User;
 
 public class Manager {
-	
 	private ConcurrentHashMap<String, User> connectedUsers;
+	private static JSONArray games;
+	
+	static {
+		games = new JSONArray();
+		games.put("Tres en raya");
+		games.put("Ajedrez");
+	}
 	
 	private Manager() {
 		this.connectedUsers = new ConcurrentHashMap<>();
@@ -39,5 +47,9 @@ public class Manager {
 	
 	public void logout(User user) {
 		this.connectedUsers.remove(user.getUserName());
+	}
+	
+	public JSONArray getGames() {
+		return games;
 	}
 }

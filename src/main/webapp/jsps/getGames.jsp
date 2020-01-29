@@ -13,8 +13,7 @@ try {
 		resultado.put("type", "error");
 		resultado.put("message", "Mensaje inesperado");
 	} else {
-		JSONObject jsoRespuesta=Manager.get().getGames();
-		resultado.put("resultado", jsoRespuesta);
+		resultado.put("resultado", Manager.get().getGames());
 		resultado.put("type", "OK");
 	}
 }
