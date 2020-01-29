@@ -1,0 +1,105 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<style>
+	.square {
+		border: 1px outset black;
+		height:25px;
+		width:25px;
+		cursor:pointer;
+	}
+	.col-centered{
+	    float: none;
+	    margin: 0 auto;
+	}
+</style>
+</head>
+
+<body>
+<div class="jumbotron text-center">
+	<h2>Juegos</h2>
+	<div id="mensajeCorto"></div>	
+</div>
+
+<div class="jumbotron text-center">
+	<div class="row" id="divMenu">
+		<div class="col-sm-3"></div>
+		<div class="col-sm-3" id="mostrarLogin">
+			<a>Login</a>
+		</div>
+		<div class="col-sm-3" id="mostrarRegistro">
+			<a>Registro</a>
+		</div>
+		<div class="col-sm-3"></div>
+	</div>
+	<div class="row" id="logout" style="display:none">
+		<div class="col-sm-4"></div>
+		<div class="col-sm-2">
+			<a href="javascript:logout()">Salir</a>
+		</div>
+		<div class="col-sm-4"></div>
+	</div>
+	
+	<div class="container" id="divFormularios">
+		<div class="row">
+			<div class="col-sm-12 col-centered">
+				<div id="divLogin" style="display:none">
+					<b>Login</b><br>
+					<input type="text" id="loginUserName" placeholder="user name"><br>
+					<input type="password" id="loginPwd" placeholder="password"><br>
+					<button onclick="login()" id="btnLogin">Login</button><br>
+					<button onclick="requestToken()" id="btnRecuperarPwd">Recuperar password</button><br>
+				</div>
+				<div id="divRegistro" style="display:none">
+					<b>Registro</b><br>
+					<input type="email" placeholder="email" id="registroEmail"><br>
+					<input type="text" placeholder="user name" id="registroUserName"><br>
+					<input type="password" placeholder="password" id="pwd1"><br>
+					<input type="password" placeholder="repeat your password" id="pwd2"><br>
+					<button onclick="register()" id="registroBtn">Register</button><br>
+				</div>
+				<div id="divSeleccionDeJuego" style="display:none">
+					<select></select>
+					<button onclick="joinGame()" id="buttonJoinGame">Join game</button>	
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+$(document).ready(function() {
+	$("#mostrarLogin").click(function() {
+		$("#divLogin").show();
+		$("#divRegistro").hide()
+	}),
+	$("#mostrarRegistro").click(function() {
+		$("#divLogin").hide();
+		$("#divRegistro").show()
+	})
+});
+
+function login() {
+	
+}
+
+function register() {
+	
+}
+
+function requestToken() {
+	
+}
+
+function logout() {
+
+}
+</script>
+
+</body>
+</html>
