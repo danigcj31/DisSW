@@ -11,4 +11,10 @@ public class TresEnRaya extends Game {
 		return "Tres en raya";
 	}
 
+	@Override
+	protected Match buildMatch() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -19,15 +19,20 @@ public abstract class Game {
 
 	public Match startMatch(User user) {
 		Match match = this.pendingMatches.peek();
-		/*if (match==null) {
-			// crear partida
+		if (match==null) {
+			match = buildMatch();
+			this.pendingMatches.add(match);
 		} else {
 			match.addPlayer(user);
-			if (isComplete(match)) {
-				
+			if (match.getPlayers().size() == this.requiredPlayers) {
+				this.pendingMatches.poll();
+				this.inPlayMatches.put(match.getId(), match);
+				match.start();
 			}
-		}*/
+		}
 		return match;
 	}
+
+	protected abstract Match buildMatch();
 	
 }

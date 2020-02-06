@@ -11,4 +11,10 @@ public class Ajedrez extends Game {
 		return "Ajedrez";
 	}
 
+	@Override
+	protected Match buildMatch() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

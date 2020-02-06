@@ -11,4 +11,9 @@ public class Escoba extends Game {
 		return "Escoba";
 	}
 
+	@Override
+	protected Match buildMatch() {
+		return new EscobaMatch();
+	}
+
 }
