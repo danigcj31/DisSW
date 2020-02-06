@@ -24,4 +24,6 @@ public abstract class Match {
 	public String getId() {
 		return id;
 	}
+
+	public abstract void start();
 }

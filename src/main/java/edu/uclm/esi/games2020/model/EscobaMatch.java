@@ -8,4 +8,10 @@ public class EscobaMatch extends Match {
 		this.deck = new Deck();
 		this.deck.suffle();
 	}
+
+	@Override
+	public void start() {
+		// TODO Auto-generated method stub
+		
+	}
 }
