@@ -29,14 +29,42 @@
 <div class="jumbotron text-center">
 	Elige un juego<br>
 	<select id="selectGames"></select>
+	<button onclick="startMatch()">Empezar partida</button>
 </div>
 
 <script>
+	function startMatch() {
+		var info = {
+			type : "StartMatch",
+			game : selectGames.value
+		};
+		
+		var data = {
+			data : JSON.stringify(info),
+			url : "jsps/startMatch.jsp",
+			type : "post",
+			contentType: 'application/json',
+			dataType : 'json',
+			success : function() {
+				alert("OK");
+			},
+			error : function(response) {
+				alert(response.message);
+			}
+		};
+		$.ajax(data);
+	}
+
 	getGames();
 	
 	function getGames() {
 		$.get("jsps/getGames.jsp", function(response) {
-			alert(response);
+			var juegos = response.resultado;
+			var options = "";
+			for (var i=0; i<juegos.length; i++) {
+				options = options + "<option>" + juegos[i] + "</option>";
+			}
+			selectGames.innerHTML = options;
 		});
 	}
 </script>

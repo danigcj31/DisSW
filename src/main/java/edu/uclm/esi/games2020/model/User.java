@@ -5,7 +5,7 @@ import edu.uclm.esi.games2020.dao.UserDAO;
 public class User {
 	private String userName;
 	private String email;
-		
+	
 	public String getUserName() {
 		return userName;
 	}
