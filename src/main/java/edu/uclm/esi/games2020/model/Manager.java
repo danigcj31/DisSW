@@ -4,17 +4,24 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.websocket.Session;
+
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import edu.uclm.esi.games2020.dao.UserDAO;
 
 public class Manager {
 	private ConcurrentHashMap<String, User> connectedUsers;
 	private ConcurrentHashMap<String, Game> games;
+	private ConcurrentHashMap<String, Match> pendingMatches;
+	private ConcurrentHashMap<String, Match> inPlayMatches;
 	
 	private Manager() {
 		this.connectedUsers = new ConcurrentHashMap<>();
 		this.games = new ConcurrentHashMap<>();
+		this.pendingMatches = new ConcurrentHashMap<>();
+		this.inPlayMatches = new ConcurrentHashMap<>();
 		
 		Game ajedrez = new Ajedrez();
 		Game ter = new TresEnRaya();
@@ -25,9 +32,12 @@ public class Manager {
 		this.games.put(escoba.getName(), escoba);
 	}
 	
-	public void startMatch(User user, String gameName) {
+	public JSONObject joinToMatch(User user, String gameName) {
 		Game game = this.games.get(gameName);
-		Match match = game.startMatch(user);
+		Match match = game.joinToMatch(user);
+		if (!pendingMatches.containsKey(match.getId()))
+			pendingMatches.put(match.getId(), match);
+		return match.toJSON();
 	}
 	
 	private static class ManagerHolder {
@@ -63,5 +73,15 @@ public class Manager {
 		for (Game game : gamesList)
 			result.put(game.getName());
 		return result;
+	}
+
+
+	public void playerReady(String idMatch, Session session) {
+		Match match = this.pendingMatches.get(idMatch);
+		match.playerReady(session);
+		if (match.ready()) {
+			this.inPlayMatches.put(idMatch, match);
+			match.notifyStart();
+		}
 	}
 }

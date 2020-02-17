@@ -29,24 +29,29 @@
 <div class="jumbotron text-center">
 	Elige un juego<br>
 	<select id="selectGames"></select>
-	<button onclick="startMatch()">Empezar partida</button>
+	<button onclick="joinToMatch()">Empezar partida</button>
 </div>
 
 <script>
-	function startMatch() {
+	function joinToMatch() {
 		var info = {
-			type : "StartMatch",
+			type : "JoinToMatch",
 			game : selectGames.value
 		};
 		
 		var data = {
 			data : JSON.stringify(info),
-			url : "jsps/startMatch.jsp",
+			url : "jsps/joinToMatch.jsp",
 			type : "post",
 			contentType: 'application/json',
 			dataType : 'json',
-			success : function() {
-				alert("OK");
+			success : function(response) {
+				if (response.type=="match") {
+					var match = response.match;
+					sessionStorage.idMatch = match.idMatch;
+					sessionStorage.started = match.started;
+					window.location.href="game.html";
+				}
 			},
 			error : function(response) {
 				alert(response.message);

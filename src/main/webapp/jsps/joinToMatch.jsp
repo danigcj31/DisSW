@@ -17,7 +17,7 @@ try {
     }
     String p = sb.toString();
     JSONObject jso=new JSONObject(p);
-    if (!jso.getString("type").equals("StartMatch")) {
+    if (!jso.getString("type").equals("JoinToMatch")) {
 		resultado.put("type", "error");
 		resultado.put("message", "Mensaje inesperado");
 	} else {
@@ -26,8 +26,9 @@ try {
 		if (user==null) 
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "Identíficate antes de jugar");
 		else {
-			Manager.get().startMatch(user, game);
-			resultado.put("type", "OK");
+			JSONObject jsoMatch = Manager.get().joinToMatch(user, game);
+			resultado.put("type", "match");
+			resultado.put("match", jsoMatch);
 		}
 	}
 }

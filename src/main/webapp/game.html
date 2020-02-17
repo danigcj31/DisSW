@@ -1,0 +1,63 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+</head>
+
+<body>
+<div class="jumbotron text-center">
+	<h2>Juegos</h2>
+	<div id="mensajeCorto"></div>	
+</div>
+
+<button onclick="enviarMensaje()">Enviar</button>
+
+<script>
+var idMatch = sessionStorage.idMatch;
+var started = JSON.parse(sessionStorage.started);
+var mensaje;
+if (started) {
+	mensaje = "La partida " + idMatch + " ha comenzado";
+} else {
+	mensaje = "Esperando oponente para la partida " + idMatch;
+}
+mensajeCorto.innerHTML = mensaje;
+
+var url = "ws://localhost:8600/juegos";
+var ws = new WebSocket(url);
+
+ws.onopen = function(event) {
+	var msg = {
+		type : "ready",
+		idMatch : sessionStorage.idMatch
+	};
+	ws.send(JSON.stringify(msg));
+}
+
+ws.onmessage = function(event) {
+	var data = event.data;
+	data = JSON.parse(data);
+	if (data.type == "matchStarted") {
+		mensajeCorto.innerHTML="La partida ha empezado";
+	}
+}
+
+function enviarMensaje() {
+	ws.send("Hola");
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+

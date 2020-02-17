@@ -17,17 +17,18 @@ public abstract class Game {
 
 	public abstract String getName();
 
-	public Match startMatch(User user) {
+	public Match joinToMatch(User user) {
 		Match match = this.pendingMatches.peek();
 		if (match==null) {
 			match = buildMatch();
+			match.setGame(this);
+			match.addPlayer(user);
 			this.pendingMatches.add(match);
 		} else {
 			match.addPlayer(user);
 			if (match.getPlayers().size() == this.requiredPlayers) {
 				this.pendingMatches.poll();
 				this.inPlayMatches.put(match.getId(), match);
-				match.start();
 			}
 		}
 		return match;

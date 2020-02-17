@@ -3,7 +3,7 @@ package edu.uclm.esi.games2020.model;
 public class Escoba extends Game {
 
 	public Escoba() {
-		super(3);
+		super(2);
 	}
 
 	@Override

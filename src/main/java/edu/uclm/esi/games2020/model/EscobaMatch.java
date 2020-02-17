@@ -11,7 +11,7 @@ public class EscobaMatch extends Match {
 
 	@Override
 	public void start() {
-		// TODO Auto-generated method stub
-		
+		this.started = true;
+		super.notifyStart();
 	}
 }
