@@ -75,11 +75,12 @@ public class Manager {
 		return result;
 	}
 
-
+	
 	public void playerReady(String idMatch, Session session) {
 		Match match = this.pendingMatches.get(idMatch);
 		match.playerReady(session);
 		if (match.ready()) {
+			this.pendingMatches.remove(idMatch);
 			this.inPlayMatches.put(idMatch, match);
 			match.notifyStart();
 		}

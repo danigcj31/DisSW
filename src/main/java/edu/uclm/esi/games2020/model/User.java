@@ -10,6 +10,11 @@ public class User {
 	private String userName;
 	private String email;
 	private Session session;
+	private IState state;
+	
+	public void setState(IState state) {
+		this.state = state;
+	}
 	
 	public String getUserName() {
 		return userName;
@@ -41,5 +46,9 @@ public class User {
 
 	public void send(JSONObject json) {
 		this.session.getAsyncRemote().sendText(json.toString());		
+	}
+
+	public IState getState() {
+		return this.state;
 	}
 }

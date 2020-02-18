@@ -23,7 +23,10 @@ public abstract class Match {
 
 	public void addPlayer(User user) {
 		this.players.add(user);
+		setState(user);
 	}
+	
+	protected abstract void setState(User user); 
 
 	public List<User> getPlayers() {
 		return players;
@@ -49,9 +52,13 @@ public abstract class Match {
 	public void notifyStart() {
 		JSONObject jso = this.toJSON();
 		jso.put("type", "matchStarted");
-		for (User player : this.players)
+		for (User player : this.players) {
+			jso.put("startData", startData(player));
 			player.send(jso);
+		}
 	}
+
+	protected abstract JSONObject startData(User player);
 
 	public void playerReady(Session session) {
 		++readyPlayers;

@@ -32,4 +32,8 @@ public class Deck {
 			this.cards.set(b, auxiliar);
 		}
 	}
+
+	public Card getCard() {
+		return this.cards.remove(0);
+	}
 }
