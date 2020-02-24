@@ -11,47 +11,15 @@
 <body>
 <div class="jumbotron text-center">
 	<h2>Juegos</h2>
-	<div id="mensajeCorto"></div>	
+	<div data-bind="html : mensaje"></div>	
 </div>
 
-<button onclick="enviarMensaje()">Enviar</button>
+<!-- ko foreach : usuarios -->
+<span data-bind="html : item"></span><br>
+<!-- /ko -->
 
-<script>
-var idMatch = sessionStorage.idMatch;
-var started = JSON.parse(sessionStorage.started);
-var mensaje;
-if (started) {
-	mensaje = "La partida " + idMatch + " ha comenzado";
-} else {
-	mensaje = "Esperando oponente para la partida " + idMatch;
-}
-mensajeCorto.innerHTML = mensaje;
-
-var url = "ws://localhost:8600/juegos";
-var ws = new WebSocket(url);
-
-ws.onopen = function(event) {
-	var msg = {
-		type : "ready",
-		idMatch : sessionStorage.idMatch
-	};
-	ws.send(JSON.stringify(msg));
-}
-
-ws.onmessage = function(event) {
-	var data = event.data;
-	data = JSON.parse(data);
-	if (data.type == "matchStarted") {
-		mensajeCorto.innerHTML="La partida ha empezado";
-		console.log(data);
-	}
-}
-
-function enviarMensaje() {
-	ws.send("Hola");
-}
-</script>
-
+<script src="https://knockoutjs.com/downloads/knockout-3.5.0.js"></script>
+<script src="game.js"></script>
 </body>
 </html>
 
