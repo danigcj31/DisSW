@@ -15,8 +15,26 @@
 </div>
 
 <!-- ko foreach : usuarios -->
-<span data-bind="html : item"></span><br>
+<span data-bind="html : $data"></span><br>
 <!-- /ko -->
+
+<!-- ko foreach : { data: cartasEnMesa, as : "carta" } -->
+<button>
+	<label data-bind="html : number"></label>
+	<label> de </label>
+	<label data-bind="html : suit"></label>
+</button>
+<!-- /ko -->
+
+<br><br>
+<!-- ko foreach : { data: cartas, as : "carta" } -->
+<button data-bind="click : $parent.ponerEnMesa">
+	<label data-bind="html : number"></label>
+	<label> de </label>
+	<label data-bind="html : suit"></label>
+</button>
+<!-- /ko -->
+
 
 <script src="https://knockoutjs.com/downloads/knockout-3.5.0.js"></script>
 <script src="game.js"></script>

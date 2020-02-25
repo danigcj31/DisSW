@@ -13,6 +13,14 @@ function ViewModel() {
 		self.mensaje("Esperando oponente para la partida " + idMatch);
 	}
 	
+	self.ponerEnMesa = function(carta) {
+		var msg = {
+			type : "carta a la mesa",
+			carta : carta
+		};
+		ws.send(JSON.stringify(msg));
+	}
+	
 	var url = "ws://localhost:8600/juegos";
 	var ws = new WebSocket(url);
 
@@ -34,6 +42,13 @@ function ViewModel() {
 				var player = players[i];
 				self.usuarios.push(player.userName);
 			}
+			var table = data.startData.table;
+			for (var i=0; i<table.length; i++) {
+				self.cartasEnMesa.push(table[i]);
+			}
+			var cartas = data.startData.data;
+			for (var i=0; i<cartas.length; i++)
+				self.cartas.push(cartas[i]);
 			console.log(data);
 		}
 	}
