@@ -23,15 +23,11 @@ public class Manager {
 		this.pendingMatches = new ConcurrentHashMap<>();
 		this.inPlayMatches = new ConcurrentHashMap<>();
 		
-		//commit etest
+		Game ter = new TresEnRayaGame();
+		Game domino = new DominoGame();
 		
-		Game ajedrez = new Ajedrez();
-		Game ter = new TresEnRaya();
-		Game escoba = new Escoba();
-		
-		this.games.put(ajedrez.getName(), ajedrez);
 		this.games.put(ter.getName(), ter);
-		this.games.put(escoba.getName(), escoba);
+		this.games.put(domino.getName(), domino);
 	}
 	
 	public JSONObject joinToMatch(User user, String gameName) {

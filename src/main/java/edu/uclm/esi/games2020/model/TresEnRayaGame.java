@@ -1,20 +1,20 @@
 package edu.uclm.esi.games2020.model;
 
-public class Ajedrez extends Game {
+public class TresEnRayaGame extends Game {
 
-	public Ajedrez() {
+	public TresEnRayaGame() {
 		super(2);
 	}
 
 	@Override
 	public String getName() {
-		return "Ajedrez";
+		return "Tres en raya";
 	}
 
 	@Override
 	protected Match buildMatch() {
 		// TODO Auto-generated method stub
-		return null;
+		return new TresEnRayaMatch();
 	}
 
 }
