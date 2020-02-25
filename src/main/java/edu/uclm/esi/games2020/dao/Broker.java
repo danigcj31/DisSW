@@ -5,12 +5,12 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Broker {
-	private String url, user, pwd, databaseName;
+	private String user, pwd, url;
 	
 	private Broker() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			url="jdbc:mysql://" + this.url + ":3306/" + this.databaseName + "?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&useSSL=false";
+			this.url="jdbc:mysql://alarcosj.esi.uclm.es:3306/ajedrez?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&useSSL=false";
 			user="ideas";
 			pwd="ideas123";
 		} catch (Exception e) {

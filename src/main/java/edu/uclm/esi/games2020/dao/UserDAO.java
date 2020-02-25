@@ -9,12 +9,12 @@ import edu.uclm.esi.games2020.model.*;
 
 public class UserDAO {
 
-	public static void insert(User user, String pwd) throws Exception {
+	public static void insert(String email, String userName, String pwd) throws Exception {
 		try(Connection bd=Broker.get().getBd()) {
-			String sql="insert into users (email, user_name, pwd) values (?, ?, ?)";
+			String sql="insert into user (email, user_name, pwd) values (?, ?, ?)";
 			try(PreparedStatement ps=bd.prepareStatement(sql)) {
-				ps.setString(1, user.getEmail());
-				ps.setString(2, user.getUserName());
+				ps.setString(1, email);
+				ps.setString(2, userName);
 				ps.setString(3, pwd);
 				ps.executeUpdate();
 			}

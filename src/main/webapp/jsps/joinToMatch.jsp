@@ -16,21 +16,19 @@ try {
         sb.append(charBuffer, 0, bytesRead);
     }
     String p = sb.toString();
-	JSONObject jso=new JSONObject(p);
-	
-	if (!jso.getString("type").equals("Register")) {
+    JSONObject jso=new JSONObject(p);
+    if (!jso.getString("type").equals("JoinToMatch")) {
 		resultado.put("type", "error");
 		resultado.put("message", "Mensaje inesperado");
 	} else {
-		String email=jso.getString("email");
-		String userName=jso.getString("userName");
-		String pwd1=jso.getString("pwd1");
-		String pwd2=jso.getString("pwd2");
-		if (!pwd1.equals(pwd2)) {
-			response.sendError(HttpServletResponse.SC_CONFLICT, "Las passwords no coinciden");
-		} else {
-			Manager.get().register(email, userName, pwd1);
-			resultado.put("type", "OK");
+		String game=jso.getString("game");
+		User user = (User) session.getAttribute("user");
+		if (user==null) 
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "Identíficate antes de jugar");
+		else {
+			JSONObject jsoMatch = Manager.get().joinToMatch(user, game);
+			resultado.put("type", "match");
+			resultado.put("match", jsoMatch);
 		}
 	}
 }
