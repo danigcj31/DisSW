@@ -23,6 +23,9 @@ public class Manager {
 		this.pendingMatches = new ConcurrentHashMap<>();
 		this.inPlayMatches = new ConcurrentHashMap<>();
 		
+		
+		//commit test
+		
 		Game ajedrez = new Ajedrez();
 		Game ter = new TresEnRaya();
 		Game escoba = new Escoba();
