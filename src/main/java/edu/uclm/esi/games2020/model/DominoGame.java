@@ -9,13 +9,12 @@ public class DominoGame extends Game {
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
-		return null;
+		return "Domino";
 	}
 
 	@Override
 	protected Match buildMatch() {
-		// TODO Auto-generated method stub
-		return null;
+		return new DominoMatch();
 	}
 
 }

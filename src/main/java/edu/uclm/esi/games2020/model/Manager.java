@@ -26,8 +26,8 @@ public class Manager {
 		Game ter = new TresEnRayaGame();
 		Game domino = new DominoGame();
 		
-		this.games.put(ter.getName(), ter);
-		this.games.put(domino.getName(), domino);
+		this.games.put(ter.getName(),ter);
+		this.games.put(domino.getName(),domino);
 	}
 	
 	public JSONObject joinToMatch(User user, String gameName) {

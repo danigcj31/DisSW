@@ -4,12 +4,13 @@ import org.json.JSONObject;
 
 public class TresEnRayaMatch extends Match {
 
-	@Override
-	protected void setState(User user) {
-		// TODO Auto-generated method stub
-
+	public TresEnRayaMatch () {
+		super();
+		// quien empieza
+		//coger aleatoriamente X o O
+		//
 	}
-
+	
 	@Override
 	public void start() {
 		// TODO Auto-generated method stub
@@ -20,6 +21,12 @@ public class TresEnRayaMatch extends Match {
 	protected JSONObject startData(User player) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	protected void setState(User user) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
