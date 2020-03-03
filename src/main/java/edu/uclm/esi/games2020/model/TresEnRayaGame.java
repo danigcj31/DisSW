@@ -16,7 +16,7 @@ public class TresEnRayaGame extends Game {
 
 	@Override
 	protected Match buildMatch() {
-		return new TresEnRayaMatch();
+		return new TresEnRayaMatch(this);
 	}
 
 }

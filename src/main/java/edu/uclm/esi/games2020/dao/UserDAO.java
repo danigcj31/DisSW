@@ -1,6 +1,7 @@
 package edu.uclm.esi.games2020.dao;
 
 import java.sql.Connection;
+import java.sql.Wrapper;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

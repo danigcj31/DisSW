@@ -6,9 +6,11 @@ import java.sql.SQLException;
 
 public class Broker {
 	private String user, pwd, url;
+	private Pool pool;
 	
 	private Broker() {
 		try {
+			pool = new Pool(18);
 			Class.forName("com.mysql.jdbc.Driver");
 			this.url="jdbc:mysql://alarcosj.esi.uclm.es:3306/ajedrez?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&useSSL=false";
 			user="ideas";
@@ -29,5 +31,9 @@ public class Broker {
 
 	public Connection getBd() throws SQLException {
 		return DriverManager.getConnection(url, user, pwd);
+	}
+	
+	public WrapperConnection getBd1() throws SQLException {
+		return pool.getConnection();
 	}
 }
