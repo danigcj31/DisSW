@@ -9,6 +9,7 @@ import edu.uclm.esi.games2020.model.TresEnRayaBoard;
 public class TresEnRayaMatch extends Match {
 	
 	private TresEnRayaBoard board;
+	private User user;
 
 	public TresEnRayaMatch(Game game) {
 		super();
@@ -23,10 +24,10 @@ public class TresEnRayaMatch extends Match {
 	}
 
 	protected boolean tieneElTurno(User user) {
-		return (this.getCurrentPlayer()==0 && player==this.playerA) || (this.getCurrentPlayer()==1 && player==playerB);
+		return (this.getCurrentPlayer()==0 && user==this.playerA) || (this.getCurrentPlayer()==1 && user==playerB);
 	}
 
-	private int getCurrentPlayer() {
+	public int getCurrentPlayer() {
 		return 0;
 	}
 

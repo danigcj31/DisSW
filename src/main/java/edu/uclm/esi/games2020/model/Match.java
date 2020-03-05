@@ -1,19 +1,31 @@
 package edu.uclm.esi.games2020.model;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.websocket.Session;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.web.socket.WebSocketSession;
 
+@Entity(name="Partida")
 public abstract class Match {
+	@OneToMany
 	protected List<User> players;
+	@Id
 	protected String id;
+	@Transient
 	protected boolean started;
+	@Transient
 	private int readyPlayers;
+	@Transient
 	private Game game;
 	
 	public Match() {
@@ -36,7 +48,11 @@ public abstract class Match {
 		return id;
 	}
 
-	public abstract void start();
+	public abstract void start() throws IOException;
+	
+	/*public JSONObject toJSON() {
+		return JSONificador.toJSON(this);
+	}*/
 
 	public JSONObject toJSON() {
 		JSONObject jso = new JSONObject();
@@ -49,7 +65,7 @@ public abstract class Match {
 		return jso;
 	}
 
-	public void notifyStart() {
+	public void notifyStart() throws IOException {
 		JSONObject jso = this.toJSON();
 		jso.put("type", "matchStarted");
 		for (User player : this.players) {

@@ -1,8 +1,8 @@
 function ViewModel() {
 	var self = this;
 	self.usuarios = ko.observableArray([]);
-	self.cartas = ko.observableArray([]);
-	self.cartasEnMesa = ko.observableArray([]);
+	self.turno = ko.observable(false);
+	self.fichas = ko.observableArray([]);
 	
 	var idMatch = sessionStorage.idMatch;
 	var started = JSON.parse(sessionStorage.started);
@@ -12,27 +12,27 @@ function ViewModel() {
 	} else {
 		self.mensaje("Esperando oponente para la partida " + idMatch);
 	}
-	
+
 	self.ponerEnMesa = function(carta) {
 		var msg = {
 			type : "carta a la mesa",
 			carta : carta
 		};
-		ws.send(JSON.stringify(msg));
+		sws.send(JSON.stringify(msg));
 	}
 	
-	var url = "ws://localhost:8800/juegos";
-	var ws = new WebSocket(url);
+	var url = "sws://localhost:8800/juegos";
+	var sws = new SpringWebSocket(url);
 
-	ws.onopen = function(event) {
+	sws.afterConnectionEstablished = function(event) {
 		var msg = {
 			type : "ready",
 			idMatch : sessionStorage.idMatch
 		};
-		ws.send(JSON.stringify(msg));
+		sws.send(JSON.stringify(msg));
 	}
 
-	ws.onmessage = function(event) {
+	sws.handleMessage = function(event) {
 		var data = event.data;
 		data = JSON.parse(data);
 		if (data.type == "matchStarted") {
