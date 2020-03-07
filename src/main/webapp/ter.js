@@ -22,7 +22,7 @@ function ViewModel() {
 	}
 	
 	var url = "sws://localhost:8800/juegos";
-	var sws = new SpringWebSocket(url);
+	var sws = new SpringWebSocket(url);	//NO RECONOCE LA CLASE SpringWebSocket. Preguntar a Macario
 
 	sws.afterConnectionEstablished = function(event) {
 		var msg = {

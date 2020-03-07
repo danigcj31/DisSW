@@ -1,12 +1,9 @@
 package edu.uclm.esi.games2020.model;
 
 import java.io.IOException;
-import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.servlet.http.HttpSession;
 
@@ -18,12 +15,9 @@ import org.springframework.web.socket.WebSocketSession;
 @Entity
 public class User {
 	@Id
-	@Column(name="nombre_usuario")
 	private String userName;
 	private String email;
 	private String pwd;
-	@OneToMany
-	private List<Match> matches;
 	@Transient
 	private WebSocketSession session;
 	@Transient

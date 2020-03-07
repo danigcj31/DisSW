@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpSession;
-import javax.websocket.Session;
 
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,22 +22,24 @@ public class Manager {
 	private ConcurrentHashMap<String, Game> games;
 	private ConcurrentHashMap<String, Match> pendingMatches;
 	private ConcurrentHashMap<String, Match> inPlayMatches;
-	
+
 	@Autowired
 	private UserDAO userDAO;
-	
+
 	private Manager() {
 		this.connectedUsersByUserName = new ConcurrentHashMap<>();
 		this.connectedUsersByHttpSession = new ConcurrentHashMap<>();
 		this.games = new ConcurrentHashMap<>();
 		this.pendingMatches = new ConcurrentHashMap<>();
 		this.inPlayMatches = new ConcurrentHashMap<>();
-		
+
 		Game ter = new TresEnRayaGame();
-		
+		Game domino = new DominoGame();
+
 		this.games.put(ter.getName(), ter);
+		this.games.put(domino.getName(), domino);
 	}
-	
+
 	public Match joinToMatch(User user, String gameName) {
 		Game game = this.games.get(gameName);
 		Match match = game.joinToMatch(user);
@@ -46,11 +47,11 @@ public class Manager {
 			pendingMatches.put(match.getId(), match);
 		return match;
 	}
-	
+
 	private static class ManagerHolder {
-		static Manager singleton=new Manager();
+		static Manager singleton = new Manager();
 	}
-	
+
 	@Bean
 	public static Manager get() {
 		return ManagerHolder.singleton;
@@ -64,13 +65,13 @@ public class Manager {
 				this.connectedUsersByUserName.put(userName, user);
 				this.connectedUsersByHttpSession.put(httpSession.getId(), user);
 				return user;
-			} else throw new Exception("Credenciales inv·lidas");
-		}
-		catch(SQLException e) {
-			throw new Exception("Credenciales inv·lidas");
+			} else
+				throw new Exception("Credenciales inv√°lidas");
+		} catch (SQLException e) {
+			throw new Exception("Credenciales inv√°lidas");
 		}
 	}
-	
+
 	public void register(String email, String userName, String pwd) throws Exception {
 		User user = new User();
 		user.setEmail(email);
@@ -78,12 +79,12 @@ public class Manager {
 		user.setPwd(pwd);
 		userDAO.save(user);
 	}
-	
+
 	public void logout(User user) {
 		this.connectedUsersByUserName.remove(user.getUserName());
 		this.connectedUsersByHttpSession.remove(user.getHttpSession().getId());
 	}
-	
+
 	public JSONArray getGames() {
 		Collection<Game> gamesList = this.games.values();
 		JSONArray result = new JSONArray();
@@ -92,8 +93,7 @@ public class Manager {
 		return result;
 	}
 
-	
-	public void playerReady(String idMatch, Session session) throws IOException {
+	public void playerReady(String idMatch, WebSocketSession session) throws IOException {
 		Match match = this.pendingMatches.get(idMatch);
 		match.playerReady(session);
 		if (match.ready()) {

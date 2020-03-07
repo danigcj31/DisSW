@@ -30,16 +30,28 @@ public class Controller {
 		User user = Manager.get().login(session, userName, pwd);
 		session.setAttribute("user", user);
 	}
-	
+
+	@PostMapping("/register")
+	public void register(@RequestBody Map<String, Object> credenciales) throws Exception {
+		JSONObject jso = new JSONObject(credenciales);
+		String userName = jso.getString("userName");
+		String email = jso.getString("email");
+		String pwd1 = jso.getString("pwd1");
+		String pwd2 = jso.getString("pwd2");
+		if (pwd1.equals(pwd2))
+			Manager.get().register(email, userName, pwd1);
+	}
+
 	@GetMapping("/getGames")
 	public JSONArray getGames(HttpSession session) throws Exception {
 		return Manager.get().getGames();
 	}
-	
-	@PostMapping(value = "/joinToMatchConMap", produces=MediaType.APPLICATION_JSON_VALUE)
-	public Map<String, Object> joinToMatchConMap(HttpSession session, HttpServletResponse response, @RequestBody Map<String, Object> info) {
+
+	@PostMapping(value = "/joinToMatchConMap", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Map<String, Object> joinToMatchConMap(HttpSession session, HttpServletResponse response,
+			@RequestBody Map<String, Object> info) {
 		User user = (User) session.getAttribute("user");
-		if (user==null) {
+		if (user == null) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Identíficate antes de jugar");
 		} else {
 			JSONObject jso = new JSONObject(info);
@@ -51,11 +63,12 @@ public class Controller {
 			return resultado;
 		}
 	}
-	
-	@PostMapping(value = "/joinToMatch", produces=MediaType.APPLICATION_JSON_VALUE)
-	public String joinToMatch(HttpSession session, HttpServletResponse response, @RequestBody Map<String, Object> info) {
+
+	@PostMapping(value = "/joinToMatch", produces = MediaType.APPLICATION_JSON_VALUE)
+	public String joinToMatch(HttpSession session, HttpServletResponse response,
+			@RequestBody Map<String, Object> info) {
 		User user = (User) session.getAttribute("user");
-		if (user==null) {
+		if (user == null) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Identíficate antes de jugar");
 		} else {
 			JSONObject jso = new JSONObject(info);

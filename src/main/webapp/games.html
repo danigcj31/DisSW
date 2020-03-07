@@ -41,7 +41,7 @@
 		
 		var data = {
 			data : JSON.stringify(info),
-			url : "jsps/joinToMatch.jsp",
+			url : "joinToMatch",
 			type : "post",
 			contentType: 'application/json',
 			dataType : 'json',
@@ -50,7 +50,7 @@
 					var match = response.match;
 					sessionStorage.idMatch = match.idMatch;
 					sessionStorage.started = match.started;
-					window.location.href="game.html";
+					window.location.href="ter.html";
 				}
 			},
 			error : function(response) {
@@ -63,8 +63,7 @@
 	getGames();
 	
 	function getGames() {
-		$.get("jsps/getGames.jsp", function(response) {
-			var juegos = response.resultado;
+		$.get("getGames", function(juegos) {
 			var options = "";
 			for (var i=0; i<juegos.length; i++) {
 				options = options + "<option>" + juegos[i] + "</option>";

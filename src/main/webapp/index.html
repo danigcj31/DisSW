@@ -87,10 +87,9 @@ function login() {
 	
 	var data = {
 		data : JSON.stringify(info),
-		url : "jsps/login.jsp",
+		url : "login",
 		type : "post",
 		contentType: 'application/json',
-		dataType : 'json',
 		success : function() {
 			window.location.href="games.html";
 		},
@@ -111,7 +110,7 @@ function register() {
 	};
 	var data = {
 			data : JSON.stringify(info),
-			url : "jsps/register.jsp",
+			url : "register",
 			type : "post",
 			contentType: 'application/json',
 			dataType : 'json',
