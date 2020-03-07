@@ -7,7 +7,7 @@ import edu.uclm.esi.games2020.model.Game;
 import edu.uclm.esi.games2020.model.Match;
 import edu.uclm.esi.games2020.model.TresEnRayaBoard;
 
-public class TresEnRayaMatch extends Match {
+public abstract class TresEnRayaMatch extends Match {
 	
 	private TresEnRayaBoard board;
 	private User user;
@@ -34,7 +34,7 @@ public class TresEnRayaMatch extends Match {
 
 	@Override
 	protected void setState(User user) {
-		IState state = new TerState();
+		IState state = new IState();
 		user.setState(state);
 		state.setUser(user);
 	}

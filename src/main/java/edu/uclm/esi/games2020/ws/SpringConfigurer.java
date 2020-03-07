@@ -22,5 +22,4 @@ public class SpringConfigurer implements WebSocketConfigurer {
 		SpringWebSocket webSocket = new SpringWebSocket();
 		registry.addHandler(webSocket, "juegos").setAllowedOrigins("*");
 	}
-
 }
