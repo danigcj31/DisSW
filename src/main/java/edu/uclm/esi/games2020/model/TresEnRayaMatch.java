@@ -7,12 +7,12 @@ import edu.uclm.esi.games2020.model.Game;
 import edu.uclm.esi.games2020.model.Match;
 import edu.uclm.esi.games2020.model.TresEnRayaBoard;
 
-public abstract class TresEnRayaMatch extends Match {
+public  class TresEnRayaMatch extends Match {
 	
 	private TresEnRayaBoard board;
 	private User user;
 
-	public TresEnRayaMatch(Game game) {
+	public TresEnRayaMatch() {
 		super();
 		this.board = new TresEnRayaBoard(this);
 		calculateFirstPlayer();
@@ -34,7 +34,7 @@ public abstract class TresEnRayaMatch extends Match {
 
 	@Override
 	protected void setState(User user) {
-		IState state = new IState();
+		IState state = new TerState();
 		user.setState(state);
 		state.setUser(user);
 	}

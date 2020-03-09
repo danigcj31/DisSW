@@ -15,10 +15,10 @@ function ViewModel() {
 		self.mensaje("Esperando oponente para la partida " + idMatch);
 	}
 	
-	var url = "sws://localhost:8800/juegos";
-	var sws = new SpringWebSocket(url);	//NO RECONOCE LA CLASE SpringWebSocket. Preguntar a Macario
+	var url = "ws://localhost:8800/juegos";
+	var sws = new WebSocket(url);	//NO RECONOCE LA CLASE SpringWebSocket. Preguntar a Macario
 
-	sws.afterConnectionEstablished = function(event) {
+	sws.onopen = function(event) {
 		var msg = {
 			type : "ready",
 			idMatch : sessionStorage.idMatch
@@ -26,7 +26,7 @@ function ViewModel() {
 		sws.send(JSON.stringify(msg));
 	}
 
-	sws.handleMessage = function(event) {
+	sws.onmessage = function(event) {
 		var data = event.data;
 		data = JSON.parse(data);
 		if (data.type == "matchStarted") {
