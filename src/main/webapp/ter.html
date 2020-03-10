@@ -1,64 +1,36 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
 </head>
 
 <body>
-<div class="jumbotron text-center">
-	<h2>Juegos</h2>
-	<div data-bind="html : mensaje"></div>	
-</div>
+	<div class="jumbotron text-center">
+		<h2>Juegos</h2>
+		<div data-bind="html : mensaje"></div>
+	</div>
 
-<!-- ko foreach : usuarios -->
-<span data-bind="html : $data"></span><br>
-<!-- /ko -->
+	<!-- ko foreach : usuarios -->
+	<span data-bind="html : $data"></span>
+	<br>
+	<!-- /ko -->
 
-
-<button data-bind="click: colocarFicha">
-	<label> -</label>
-</button>
-
-<button data-bind="click: colocarFicha">
-	<label> - </label>
-</button>
-
-<button data-bind="click: colocarFicha">
-	<label> - </label>
-</button>
-<br><br>
-
-<button data-bind="click: colocarFicha">
-	<label> -</label>
-</button
->
-<button data-bind="click: colocarFicha">
-	<label> - </label>
-</button>
-
-<button data-bind="click: colocarFicha">
-	<label> - </label>
-</button>
-<br><br>
-
-<button data-bind="click: colocarFicha">
-	<label> - </label>
-</button>
-
-<button data-bind="click: colocarFicha">
-	<label> - </label>
-</button>
-
-<button data-bind="click: colocarFicha">
-	<label> - </label>
-</button>
+	<!-- ko foreach : { data: tablero, as : "ficha" } -->
+	<button>
+		<label data-bind="click: $parent.colocarFicha, html : simbolo"></label>
+	</button>
+	<!-- /ko -->
 
 
-<script src="https://knockoutjs.com/downloads/knockout-3.5.0.js"></script>
-<script src="ter.js"></script>
+	<script src="https://knockoutjs.com/downloads/knockout-3.5.0.js"></script>
+	<script src="ter.js"></script>
 </body>
 </html>

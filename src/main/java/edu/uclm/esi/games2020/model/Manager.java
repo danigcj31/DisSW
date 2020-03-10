@@ -1,4 +1,4 @@
-package edu.uclm.esi.games2020.model;
+		package edu.uclm.esi.games2020.model;
 
 import java.io.IOException;
 import java.sql.SQLException;
