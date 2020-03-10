@@ -21,7 +21,7 @@ public class TresEnRayaMatch extends Match {
 
 		this.tablero = new ArrayList<>();
 		//for (int i = 0; i < tablero.size(); i++)
-		this.tablero.add(new Ficha('-'));
+		this.tablero.add(new Ficha(' '));
 		this.tablero.add(new Ficha('-'));
 		this.tablero.add(new Ficha('-'));
 		this.tablero.add(new Ficha('-'));

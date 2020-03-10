@@ -42,9 +42,7 @@ function ViewModel() {
 			// Dibuja el tablero
 			var tablero = data.startData.table;
 			for (var i=0; i<tablero.length; i++) {
-				var ficha = tablero[i];
-				console.log(data)
-				self.tablero.push(ficha.simbolo);
+				self.tablero.push(tablero[i]);
 			}
 		}
 	}
