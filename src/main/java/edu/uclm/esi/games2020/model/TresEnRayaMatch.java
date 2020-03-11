@@ -3,13 +3,9 @@ package edu.uclm.esi.games2020.model;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-import edu.uclm.esi.games2020.model.Game;
 import edu.uclm.esi.games2020.model.Match;
-import edu.uclm.esi.games2020.model.TresEnRayaBoard;
 
 public class TresEnRayaMatch extends Match {
 
@@ -21,15 +17,15 @@ public class TresEnRayaMatch extends Match {
 
 		this.tablero = new ArrayList<>();
 		//for (int i = 0; i < tablero.size(); i++)
-		this.tablero.add(new Ficha(' '));
-		this.tablero.add(new Ficha('-'));
-		this.tablero.add(new Ficha('-'));
-		this.tablero.add(new Ficha('-'));
-		this.tablero.add(new Ficha('-'));
-		this.tablero.add(new Ficha('-'));
-		this.tablero.add(new Ficha('-'));
-		this.tablero.add(new Ficha('-'));
-		this.tablero.add(new Ficha('-'));
+		this.tablero.add(new Ficha("-"));
+		this.tablero.add(new Ficha("-"));
+		this.tablero.add(new Ficha("-"));
+		this.tablero.add(new Ficha("-"));
+		this.tablero.add(new Ficha("-"));
+		this.tablero.add(new Ficha("-"));
+		this.tablero.add(new Ficha("-"));
+		this.tablero.add(new Ficha("-"));
+		this.tablero.add(new Ficha("-"));
 
 	}
 
