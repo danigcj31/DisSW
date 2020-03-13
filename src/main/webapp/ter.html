@@ -24,9 +24,12 @@
 	<!-- /ko -->
 
 	<!-- ko foreach : { data: tablero, as : "ficha" } -->
-	<button>
+		<button>
 		<label data-bind="click: $parent.colocarFicha, html : simbolo"></label>
-	</button>
+		</button>
+		<!-- ko if: ($index()+1)%3 === 0 -->
+		<br>
+		<!-- /ko -->
 	<!-- /ko -->
 
 

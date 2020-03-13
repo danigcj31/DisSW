@@ -36,8 +36,9 @@ public class Manager {
 		Game ter = new TresEnRayaGame();
 		Game domino = new DominoGame();
 
-		this.games.put(ter.getName(), ter);
 		this.games.put(domino.getName(), domino);
+		this.games.put(ter.getName(), ter);
+		
 	}
 
 	public Match joinToMatch(User user, String gameName) {
