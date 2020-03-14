@@ -1,13 +1,16 @@
 function ViewModel() {
 	var self = this;
 	self.usuarios = ko.observableArray([]);
-	self.tablero = ko.observableArray([]);
+	self.tableroArray = ko.observableArray([]);
 	self.turno = ko.observable(false);
+	self.fichaX = ko.observable;
+	self.fichaO = ko.observable;
 
 	var idMatch = sessionStorage.idMatch;
 	var started = JSON.parse(sessionStorage.started);
 
 	self.mensaje = ko.observable("");
+	self.simbolo = ko.observable("");
 
 	if (started) {
 		self.mensaje("La partida " + idMatch + " ha comenzado");
@@ -43,15 +46,21 @@ function ViewModel() {
 
 			// Dibuja el tablero
 			var tablero = data.startData.table;
-			//var contador = 0;
+			var fichasXO = data.startData.fichasXO;
+
 			for (var i = 0; i < tablero.length; i++) {
-				self.tablero.push(tablero[i]);
-				/*contador = contador + 1;
-				if (contador % 3 == 0)
-					document.write("<br>")
-					*/
+				self.tableroArray.push(tablero[i]);
 			}
+			self.fichaX = fichasXO[0];
+			self.fichaO = fichasXO[1];
+
 		}
+
+	}
+	self.colocarFicha = function(ficha) {
+		
+		self.tableroArray.replace(ficha,self.fichaX);
+
 	}
 	/*
 	 * self.funcion = function() { var players = data.players; for (var i=0; i<players.length;

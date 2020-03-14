@@ -10,13 +10,15 @@ import edu.uclm.esi.games2020.model.Match;
 public class TresEnRayaMatch extends Match {
 
 	private List<Ficha> tablero;
+	private List<Ficha> fichasXO;
 	private User user;
 
 	public TresEnRayaMatch() {
 		super();
 
 		this.tablero = new ArrayList<>();
-		//for (int i = 0; i < tablero.size(); i++)
+		this.fichasXO = new ArrayList<>();
+		
 		this.tablero.add(new Ficha("-"));
 		this.tablero.add(new Ficha("-"));
 		this.tablero.add(new Ficha("-"));
@@ -26,6 +28,9 @@ public class TresEnRayaMatch extends Match {
 		this.tablero.add(new Ficha("-"));
 		this.tablero.add(new Ficha("-"));
 		this.tablero.add(new Ficha("-"));
+		
+		this.fichasXO.add(new Ficha("X"));
+		this.fichasXO.add(new Ficha("Y"));
 
 	}
 
@@ -56,11 +61,17 @@ public class TresEnRayaMatch extends Match {
 
 		JSONObject jso = new JSONObject();
 		JSONArray jsaTablero = new JSONArray();
+		JSONArray jsaFichasXO = new JSONArray();
+		
+		for (Ficha ficha : this.fichasXO)
+			jsaFichasXO.put(ficha.toJSON());
+		
 		
 		for (Ficha ficha : this.tablero)
 			jsaTablero.put(ficha.toJSON());
 		
 		jso.put("table", jsaTablero);
+		jso.put("fichasXO", jsaFichasXO);
 
 		return jso;
 	}
