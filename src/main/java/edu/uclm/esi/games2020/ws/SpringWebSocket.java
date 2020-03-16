@@ -1,6 +1,7 @@
 package edu.uclm.esi.games2020.ws;
 
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.json.JSONObject;
 import org.springframework.http.HttpHeaders;
@@ -14,6 +15,8 @@ import edu.uclm.esi.games2020.model.User;
 
 @Component
 public class SpringWebSocket extends TextWebSocketHandler {
+	private ConcurrentHashMap<String, User> users = new ConcurrentHashMap<>();
+
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		System.out.println("Se ha conectado " + session.getId());
@@ -24,16 +27,25 @@ public class SpringWebSocket extends TextWebSocketHandler {
 				String httpSessionId = cookie.substring("JSESSIONID=".length());
 				User user = Manager.get().findUserByHttpSessionId(httpSessionId);
 				user.setSession(session);
+				users.put(session.getId(), user);
 				break;
 			}
 	}
-	
+
 	@Override
 	public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
-		System.out.println("La sesión " + session.getId() + " dice " + message.getPayload());
 		JSONObject jso = new JSONObject(message.getPayload().toString());
 		if (jso.getString("type").equals("ready")) {
 			Manager.get().playerReady(jso.getString("idMatch"), session);
+		} else if (jso.getString("type").equals("movimiento")) {
+			User usuario = users.get(session.getId());
+			try {
+				Manager.get().mover(jso.getString("idMatch"), usuario, jso.getString("ficha"));
+			} catch (Exception e) {
+				usuario.send(new JSONObject().put("type", "error").put("error", e.getMessage()));
+
+			}
 		}
 	}
+
 }

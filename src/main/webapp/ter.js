@@ -3,8 +3,8 @@ function ViewModel() {
 	self.usuarios = ko.observableArray([]);
 	self.tableroArray = ko.observableArray([]);
 	self.turno = ko.observable(false);
-	self.fichaX = ko.observable;
-	self.fichaO = ko.observable;
+	self.fichaX = ko.observable("");
+	self.fichaO = ko.observable("");
 
 	var idMatch = sessionStorage.idMatch;
 	var started = JSON.parse(sessionStorage.started);
@@ -18,7 +18,7 @@ function ViewModel() {
 		self.mensaje("Esperando oponente para la partida " + idMatch);
 	}
 
-	var url = "ws://localhost:8800/juegos";
+	var url = "ws://"+window.location.host+"/juegos";
 	var sws = new WebSocket(url); // NO RECONOCE LA CLASE SpringWebSocket.
 	// Preguntar a Macario
 
@@ -45,23 +45,29 @@ function ViewModel() {
 			console.log(data);
 
 			// Dibuja el tablero
-			var tablero = data.startData.table;
-			var fichasXO = data.startData.fichasXO;
+			var tablero = data.startData.tablero;
 
 			for (var i = 0; i < tablero.length; i++) {
 				self.tableroArray.push(tablero[i]);
 			}
-			self.fichaX = fichasXO[0];
-			self.fichaO = fichasXO[1];
+	
 
 		}
 
 	}
 	self.colocarFicha = function(ficha) {
-		
-		self.tableroArray.replace(ficha,self.fichaX);
+		var posicion = self.tableroArray.indexOf(ficha);	
+		var msg = {
+			type : "movimiento",
+			idMatch : sessionStorage.idMatch,
+			ficha: ""+posicion
+					
+		};
+		sws.send(JSON.stringify(msg));
+
 
 	}
+
 	/*
 	 * self.funcion = function() { var players = data.players; for (var i=0; i<players.length;
 	 * i++) { var player1 = players[0]; var player2 = players[1]; }
@@ -72,13 +78,6 @@ function ViewModel() {
 	/*
 	 * self.sortearJugador = function () { var players = data.players; }
 	 * 
-	 * self.colocarFicha = function() { self.tablero('X'); } self.colocarFicha2 =
-	 * function() { self.ficha2('X'); } self.colocarFicha3 = function() {
-	 * self.ficha3('O'); } self.colocarFicha4 = function() { self.ficha4('X'); }
-	 * self.colocarFicha5 = function() { self.ficha5('X'); } self.colocarFicha6 =
-	 * function() { self.ficha6('X'); } self.colocarFicha7 = function() {
-	 * self.ficha7('X'); } self.colocarFicha8 = function() { self.ficha8('X'); }
-	 * self.colocarFicha9 = function() { self.ficha9('X'); }
 	 */
 }
 

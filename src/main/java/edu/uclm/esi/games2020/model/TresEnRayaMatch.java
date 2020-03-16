@@ -3,34 +3,32 @@ package edu.uclm.esi.games2020.model;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import edu.uclm.esi.games2020.model.Match;
 
 public class TresEnRayaMatch extends Match {
 
-	private List<Ficha> tablero;
-	private List<Ficha> fichasXO;
+	private List<String> tablero;
 	private User user;
+	private User jugadorConElTurno;
 
 	public TresEnRayaMatch() {
 		super();
 
 		this.tablero = new ArrayList<>();
-		this.fichasXO = new ArrayList<>();
-		
-		this.tablero.add(new Ficha("-"));
-		this.tablero.add(new Ficha("-"));
-		this.tablero.add(new Ficha("-"));
-		this.tablero.add(new Ficha("-"));
-		this.tablero.add(new Ficha("-"));
-		this.tablero.add(new Ficha("-"));
-		this.tablero.add(new Ficha("-"));
-		this.tablero.add(new Ficha("-"));
-		this.tablero.add(new Ficha("-"));
-		
-		this.fichasXO.add(new Ficha("X"));
-		this.fichasXO.add(new Ficha("Y"));
+
+		this.tablero.add("-");
+		this.tablero.add("-");
+		this.tablero.add("-");
+		this.tablero.add("-");
+		this.tablero.add("-");
+		this.tablero.add("-");
+		this.tablero.add("-");
+		this.tablero.add("-");
+		this.tablero.add("-");
 
 	}
 
@@ -61,18 +59,42 @@ public class TresEnRayaMatch extends Match {
 
 		JSONObject jso = new JSONObject();
 		JSONArray jsaTablero = new JSONArray();
-		JSONArray jsaFichasXO = new JSONArray();
-		
-		for (Ficha ficha : this.fichasXO)
-			jsaFichasXO.put(ficha.toJSON());
-		
-		
-		for (Ficha ficha : this.tablero)
-			jsaTablero.put(ficha.toJSON());
-		
-		jso.put("table", jsaTablero);
-		jso.put("fichasXO", jsaFichasXO);
+
+		for (String ficha : this.tablero)
+			jsaTablero.put(ficha);
+
+		jso.put("tablero", jsaTablero);
 
 		return jso;
+	}
+
+	@Override
+	protected void mover(User user, String movimiento) throws Exception {
+		if (user != this.jugadorConElTurno)
+			throw new Exception("No tienes el turno");
+		int posicion = Integer.parseInt(movimiento);
+		if (!this.tablero.get(posicion).equals("-"))
+			throw new Exception("Casilla ocupada");
+		this.tablero.set(posicion, getFicha());
+
+	}
+
+	private String getFicha() {
+		if (this.jugadorConElTurno == this.players.get(0))
+			return "X";
+
+		return "O";
+	}
+
+	@Override
+	protected User sortearTurno() {
+		Random dado = new Random();
+		if (dado.nextBoolean()) {
+			this.jugadorConElTurno = players.get(0);
+		} else {
+			this.jugadorConElTurno = players.get(1);
+		}
+
+		return this.jugadorConElTurno;
 	}
 }

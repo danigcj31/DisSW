@@ -1,13 +1,15 @@
-		package edu.uclm.esi.games2020.model;
+package edu.uclm.esi.games2020.model;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -38,7 +40,7 @@ public class Manager {
 
 		this.games.put(domino.getName(), domino);
 		this.games.put(ter.getName(), ter);
-		
+
 	}
 
 	public Match joinToMatch(User user, String gameName) {
@@ -106,5 +108,11 @@ public class Manager {
 
 	public User findUserByHttpSessionId(String httpSessionId) {
 		return this.connectedUsersByHttpSession.get(httpSessionId);
+	}
+
+	public void mover(String idMatch, User user, String posicion) throws Exception {
+		Match match = this.inPlayMatches.get(idMatch);
+		match.mover(user, posicion);
+
 	}
 }

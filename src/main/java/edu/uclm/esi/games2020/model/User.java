@@ -21,6 +21,16 @@ public class User {
 	@Transient
 	private WebSocketSession session;
 	@Transient
+	private boolean turno;
+	public boolean getTurno() {
+		return turno;
+	}
+
+	public void setTurno(boolean turno) {
+		this.turno = turno;
+	}
+
+	@Transient
 	private IState state;
 	@Transient
 	private HttpSession httpSession;

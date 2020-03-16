@@ -22,4 +22,16 @@ public class DominoMatch extends Match {
 		return null;
 	}
 
+	@Override
+	protected User sortearTurno() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected void mover(User user, String movimiento) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
