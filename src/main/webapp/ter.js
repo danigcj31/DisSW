@@ -10,6 +10,8 @@ function ViewModel() {
 	var started = JSON.parse(sessionStorage.started);
 
 	self.mensaje = ko.observable("");
+	self.mensajeGanador = ko.observable("");
+	self.mensajePerdedor = ko.observable("");
 	self.simbolo = ko.observable("");
 
 	if (started) {
@@ -19,8 +21,7 @@ function ViewModel() {
 	}
 
 	var url = "ws://"+window.location.host+"/juegos";
-	var sws = new WebSocket(url); // NO RECONOCE LA CLASE SpringWebSocket.
-	// Preguntar a Macario
+	var sws = new WebSocket(url); 
 
 	sws.onopen = function(event) {
 		var msg = {
@@ -43,18 +44,94 @@ function ViewModel() {
 				self.usuarios.push(player.userName);
 			}
 			console.log(data);
-
 			// Dibuja el tablero
 			var tablero = data.startData.tablero;
 
 			for (var i = 0; i < tablero.length; i++) {
 				self.tableroArray.push(tablero[i]);
 			}
-	
-
 		}
-
 	}
+	
+	self.getWinnerFilas = function () {
+		//Filas gana X
+		//Fila 1
+		if (self.tableroArray()[0] == "X" && self.tableroArray()[1] == "X" && self.tableroArray()[2] == "X") {
+			document.write("Ha ganado el jugador " + self.usuarios()[0]);
+		}
+		//Fila 2
+		if (self.tableroArray()[3] == "X" && self.tableroArray()[4] == "X" && self.tableroArray()[5] == "X") {
+			
+		}
+		//Fila 3
+		if (self.tableroArray()[6] == "X" && self.tableroArray()[7] == "X" && self.tableroArray()[8] == "X") {
+			
+		}
+		//Filas gana O
+		//Fila 1
+		if (self.tableroArray()[0] == "O" && self.tableroArray()[1] == "O" && self.tableroArray()[2] == "O") {
+			
+		}
+		//Fila 2
+		if (self.tableroArray()[3] == "O" && self.tableroArray()[4] == "O" && self.tableroArray()[5] == "O") {
+			
+		}
+		//Fila 4
+		if (self.tableroArray()[6] == "O" && self.tableroArray()[7] == "O" && self.tableroArray()[8] == "O") {
+			
+		}
+	}
+	
+	self.getWinnerColumnas = function () {
+		//Columnas gana X
+		//Columna 1
+		if (self.tableroArray()[0] == "X" && self.tableroArray()[3] == "X" && self.tableroArray()[6] == "X") {
+			
+		}
+		//Columna 2
+		if (self.tableroArray()[1] == "X" && self.tableroArray()[4] == "X" && self.tableroArray()[7] == "X") {
+			
+		}
+		//Columna 3
+		if (self.tableroArray()[2] == "X" && self.tableroArray()[5] == "X" && self.tableroArray()[8] == "X") {
+			
+		}
+		//Columna gana 0
+		//Columna 1
+		if (self.tableroArray()[0] == "O" && self.tableroArray()[3] == "O" && self.tableroArray()[6] == "O") {
+			
+		}
+		//Columna 2
+		if (self.tableroArray()[1] == "O" && self.tableroArray()[4] == "O" && self.tableroArray()[7] == "O") {
+			
+		}
+		//Columna 3
+		if (self.tableroArray()[2] == "O" && self.tableroArray()[5] == "O" && self.tableroArray()[8] == "O") {
+			
+		}
+	}
+	
+	self.getWinnerDiagonales = function () {
+		//Diagonales gana X
+		//Diagonal hacia abajo
+		if (self.tableroArray()[0] == "X" && self.tableroArray()[4] == "X" && self.tableroArray()[8] == "X") {
+			
+		}
+		//Diagonal hacia arriba
+		if (self.tableroArray()[6] == "X" && self.tableroArray()[4] == "X" && self.tableroArray()[2] == "X") {
+			
+		}
+		//Diagonales gana 0
+		//Diagonal hacia abajo
+		if (self.tableroArray()[0] == "O" && self.tableroArray()[4] == "O" && self.tableroArray()[8] == "O") {
+			
+		}
+		//Diagonal hacia arriba
+		if (self.tableroArray()[6] == "O" && self.tableroArray()[4] == "O" && self.tableroArray()[2] == "O") {
+			
+		}
+	}
+	
 	self.colocarFicha = function(ficha) {
 		var posicion = self.tableroArray.indexOf(ficha);	
 		var msg = {
@@ -64,8 +141,6 @@ function ViewModel() {
 					
 		};
 		sws.send(JSON.stringify(msg));
-
-
 	}
 
 	/*
