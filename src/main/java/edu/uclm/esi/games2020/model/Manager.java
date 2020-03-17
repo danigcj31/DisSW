@@ -113,6 +113,6 @@ public class Manager {
 	public void mover(String idMatch, User user, String posicion) throws Exception {
 		Match match = this.inPlayMatches.get(idMatch);
 		match.mover(user, posicion);
-
+		
 	}
 }

@@ -63,6 +63,17 @@ public abstract class Match {
 		}
 	}
 
+	protected void actualizarTableros() throws IOException {
+		JSONObject jso = new JSONObject();
+		jso.put("type", "actualizacionTablero");
+		jso.put("tablero",this.getTablero());
+		for (User player : this.players) {
+			player.send(jso);
+		}
+	}
+
+	protected abstract JSONArray getTablero();
+
 	protected abstract User sortearTurno();
 
 	protected abstract JSONObject startData(User player);

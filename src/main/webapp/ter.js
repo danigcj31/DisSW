@@ -1,5 +1,7 @@
+var self;
+
 function ViewModel() {
-	var self = this;
+	self = this;
 	self.usuarios = ko.observableArray([]);
 	self.tableroArray = ko.observableArray([]);
 	self.turno = ko.observable(false);
@@ -21,17 +23,17 @@ function ViewModel() {
 	}
 
 	var url = "ws://"+window.location.host+"/juegos";
-	var sws = new WebSocket(url); 
+	self.sws = new WebSocket(url); 
 
-	sws.onopen = function(event) {
+	self.sws.onopen = function(event) {
 		var msg = {
 			type : "ready",
 			idMatch : sessionStorage.idMatch
 		};
-		sws.send(JSON.stringify(msg));
+		self.sws.send(JSON.stringify(msg));
 	}
 
-	sws.onmessage = function(event) {
+	self.sws.onmessage = function(event) {
 		var data = event.data;
 		data = JSON.parse(data);
 
@@ -46,17 +48,23 @@ function ViewModel() {
 			console.log(data);
 			// Dibuja el tablero
 			var tablero = data.startData.tablero;
-
 			for (var i = 0; i < tablero.length; i++) {
-				self.tableroArray.push(tablero[i]);
+				//self.tableroArray.push(tablero[i]);
+				var ficha = new Ficha(tablero[i], i);
+				self.tableroArray.push(ficha);
 			}
+		
+		} else if (data.type == "actualizacionTablero"){
+			
+			//replace cada posicion de cada valor que llega del JSONArray 
 		}
 	}
 	
+	//compr en servidor
 	self.getWinnerFilas = function () {
 		//Filas gana X
 		//Fila 1
-		if (self.tableroArray()[0] == "X" && self.tableroArray()[1] == "X" && self.tableroArray()[2] == "X") {
+		if (self.tableroArray()[0].simbolo == "X" && self.tableroArray()[1].simbolo == "X" && self.tableroArray()[2].simbolo == "X") {
 			document.write("Ha ganado el jugador " + self.usuarios()[0]);
 		}
 		//Fila 2
@@ -131,18 +139,13 @@ function ViewModel() {
 			
 		}
 	}
-	
-	self.colocarFicha = function(ficha) {
-		var posicion = self.tableroArray.indexOf(ficha);	
-		var msg = {
-			type : "movimiento",
-			idMatch : sessionStorage.idMatch,
-			ficha: ""+posicion
-					
-		};
-		sws.send(JSON.stringify(msg));
-	}
 
+
+	
+	
+	
+	
+	
 	/*
 	 * self.funcion = function() { var players = data.players; for (var i=0; i<players.length;
 	 * i++) { var player1 = players[0]; var player2 = players[1]; }
@@ -156,5 +159,22 @@ function ViewModel() {
 	 */
 }
 
+class Ficha {
+	constructor (simbolo, index) {
+		this.simbolo = simbolo;
+		this.index = index;
+	}
+	colocarFicha () {
+		var posicion = this.index;	
+		var msg = {
+			type : "movimiento",
+			idMatch : sessionStorage.idMatch,
+			ficha: ""+posicion
+					
+		};
+		
+		self.sws.send(JSON.stringify(msg));
+	}
+}
 var vm = new ViewModel();
 ko.applyBindings(vm);

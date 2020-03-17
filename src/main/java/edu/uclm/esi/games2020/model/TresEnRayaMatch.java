@@ -76,13 +76,13 @@ public class TresEnRayaMatch extends Match {
 		if (!this.tablero.get(posicion).equals("-"))
 			throw new Exception("Casilla ocupada");
 		this.tablero.set(posicion, getFicha());
-
+		//actualizar los tableros a los clientes
+		this.actualizarTableros();
 	}
 
 	private String getFicha() {
 		if (this.jugadorConElTurno == this.players.get(0))
 			return "X";
-
 		return "O";
 	}
 
@@ -94,7 +94,16 @@ public class TresEnRayaMatch extends Match {
 		} else {
 			this.jugadorConElTurno = players.get(1);
 		}
-
 		return this.jugadorConElTurno;
+	}
+
+	@Override
+	protected JSONArray getTablero() {
+		//colocar las fichas en un JSONObject
+		JSONArray jsa = new JSONArray();
+		for (int i=0;i<this.tablero.size();i++) {
+			jsa.put(this.tablero.get(i));
+		}
+		return jsa;
 	}
 }
