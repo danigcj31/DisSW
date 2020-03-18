@@ -59,10 +59,10 @@ public class TresEnRayaMatch extends Match {
 
 		JSONObject jso = new JSONObject();
 		JSONArray jsaTablero = new JSONArray();
-
+		User jugadorInicio = sortearTurno();
 		for (String ficha : this.tablero)
 			jsaTablero.put(ficha);
-
+		jso.put("jugadorInicio", jugadorInicio);
 		jso.put("tablero", jsaTablero);
 
 		return jso;
@@ -76,7 +76,7 @@ public class TresEnRayaMatch extends Match {
 		if (!this.tablero.get(posicion).equals("-"))
 			throw new Exception("Casilla ocupada");
 		this.tablero.set(posicion, getFicha());
-		//actualizar los tableros a los clientes
+		// actualizar los tableros a los clientes
 		this.actualizarTableros();
 	}
 
@@ -99,11 +99,87 @@ public class TresEnRayaMatch extends Match {
 
 	@Override
 	protected JSONArray getTablero() {
-		//colocar las fichas en un JSONObject
+		// colocar las fichas en un JSONObject
 		JSONArray jsa = new JSONArray();
-		for (int i=0;i<this.tablero.size();i++) {
+		for (int i = 0; i < this.tablero.size(); i++) {
 			jsa.put(this.tablero.get(i));
 		}
 		return jsa;
 	}
+
+	protected boolean IsWinner(User player) {
+		Boolean winner = false;
+
+		if(IsWinnerFilas(player))
+		winner = true;
+		else if(IsWinnerColumnas(player))
+			winner = true;
+		else if(IsWinnerDiagonales(player))
+			winner = true;
+
+		return winner;
+
+	}
+
+	private Boolean IsWinnerDiagonales(User player) {
+		boolean IsWinner = false;
+		if (player == this.players.get(0)) {
+			if (this.tablero.get(0).equals("X") && this.tablero.get(4).equals("X") && this.tablero.get(8).equals("X"))
+				IsWinner = true;
+			if (this.tablero.get(6).equals("X") && this.tablero.get(4).equals("X") && this.tablero.get(2).equals("X"))
+				IsWinner = true;
+			
+		} else {
+			if (this.tablero.get(0).equals("O") && this.tablero.get(4).equals("O") && this.tablero.get(8).equals("O"))
+				IsWinner = true;
+			if (this.tablero.get(6).equals("O") && this.tablero.get(4).equals("O") && this.tablero.get(2).equals("O"))
+				IsWinner = true;
+			
+		}
+
+		return IsWinner;
+	}
+
+	private Boolean IsWinnerColumnas(User player) {
+		boolean IsWinner = false;
+		if (player == this.players.get(0)) {
+			if (this.tablero.get(0).equals("X") && this.tablero.get(3).equals("X") && this.tablero.get(6).equals("X"))
+				IsWinner = true;
+			if (this.tablero.get(1).equals("X") && this.tablero.get(4).equals("X") && this.tablero.get(7).equals("X"))
+				IsWinner = true;
+			if (this.tablero.get(2).equals("X") && this.tablero.get(5).equals("X") && this.tablero.get(8).equals("X"))
+				IsWinner = true;
+		} else {
+			if (this.tablero.get(0).equals("O") && this.tablero.get(3).equals("O") && this.tablero.get(6).equals("O"))
+				IsWinner = true;
+			if (this.tablero.get(1).equals("O") && this.tablero.get(4).equals("O") && this.tablero.get(7).equals("O"))
+				IsWinner = true;
+			if (this.tablero.get(2).equals("O") && this.tablero.get(5).equals("O") && this.tablero.get(8).equals("O"))
+				IsWinner = true;
+		}
+
+		return IsWinner;
+	}
+
+	private Boolean IsWinnerFilas(User player) {
+		boolean IsWinner = false;
+		if (player == this.players.get(0)) {
+			if (this.tablero.get(0).equals("X") && this.tablero.get(1).equals("X") && this.tablero.get(2).equals("X"))
+				IsWinner = true;
+			if (this.tablero.get(3).equals("X") && this.tablero.get(4).equals("X") && this.tablero.get(5).equals("X"))
+				IsWinner = true;
+			if (this.tablero.get(6).equals("X") && this.tablero.get(7).equals("X") && this.tablero.get(8).equals("X"))
+				IsWinner = true;
+		} else {
+			if (this.tablero.get(0).equals("O") && this.tablero.get(1).equals("O") && this.tablero.get(2).equals("O"))
+				IsWinner = true;
+			if (this.tablero.get(3).equals("O") && this.tablero.get(4).equals("O") && this.tablero.get(5).equals("O"))
+				IsWinner = true;
+			if (this.tablero.get(6).equals("O") && this.tablero.get(7).equals("O") && this.tablero.get(8).equals("O"))
+				IsWinner = true;
+		}
+
+		return IsWinner;
+	}
+
 }

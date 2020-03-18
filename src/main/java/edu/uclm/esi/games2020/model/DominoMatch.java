@@ -1,5 +1,6 @@
 package edu.uclm.esi.games2020.model;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class DominoMatch extends Match {
@@ -33,5 +34,19 @@ public class DominoMatch extends Match {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	protected JSONArray getTablero() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected boolean IsWinner(User player) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	
 
 }

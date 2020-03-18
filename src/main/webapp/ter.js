@@ -7,6 +7,7 @@ function ViewModel() {
 	self.turno = ko.observable(false);
 	self.fichaX = ko.observable("");
 	self.fichaO = ko.observable("");
+	self.jugadorTurno = ko.observable("");
 
 	var idMatch = sessionStorage.idMatch;
 	var started = JSON.parse(sessionStorage.started);
@@ -39,6 +40,8 @@ function ViewModel() {
 
 		if (data.type == "matchStarted") {
 			self.mensaje("La partida ha empezado");
+			self.jugadorTurno(data.jugadorConElTurno + " tiene el turno. ");
+			
 			var players = data.players;
 			// Mete a los usuarios en la partida
 			for (var i = 0; i < players.length; i++) {
@@ -55,108 +58,20 @@ function ViewModel() {
 			}
 		
 		} else if (data.type == "actualizacionTablero"){
-			
+			self.jugadorTurno(data.jugadorConElTurno + " tiene el turno.");
+			var tablero = data.tablero;
+			for (var i = 0; i < tablero.length; i++) {
+				//self.tableroArray.push(tablero[i]);
+				var ficha = new Ficha(tablero[i], i);
+				self.tableroArray.replace(self.tableroArray()[i],ficha);
+			}
+			if(!data.ganador == ("")){
+				self.mensajeGanador("Ha ganado " + data.ganador);
+			}
 			//replace cada posicion de cada valor que llega del JSONArray 
-		}
+		} 
 	}
 	
-	//compr en servidor
-	self.getWinnerFilas = function () {
-		//Filas gana X
-		//Fila 1
-		if (self.tableroArray()[0].simbolo == "X" && self.tableroArray()[1].simbolo == "X" && self.tableroArray()[2].simbolo == "X") {
-			document.write("Ha ganado el jugador " + self.usuarios()[0]);
-		}
-		//Fila 2
-		if (self.tableroArray()[3] == "X" && self.tableroArray()[4] == "X" && self.tableroArray()[5] == "X") {
-			
-		}
-		//Fila 3
-		if (self.tableroArray()[6] == "X" && self.tableroArray()[7] == "X" && self.tableroArray()[8] == "X") {
-			
-		}
-		//Filas gana O
-		//Fila 1
-		if (self.tableroArray()[0] == "O" && self.tableroArray()[1] == "O" && self.tableroArray()[2] == "O") {
-			
-		}
-		//Fila 2
-		if (self.tableroArray()[3] == "O" && self.tableroArray()[4] == "O" && self.tableroArray()[5] == "O") {
-			
-		}
-		//Fila 4
-		if (self.tableroArray()[6] == "O" && self.tableroArray()[7] == "O" && self.tableroArray()[8] == "O") {
-			
-		}
-	}
-	
-	self.getWinnerColumnas = function () {
-		//Columnas gana X
-		//Columna 1
-		if (self.tableroArray()[0] == "X" && self.tableroArray()[3] == "X" && self.tableroArray()[6] == "X") {
-			
-		}
-		//Columna 2
-		if (self.tableroArray()[1] == "X" && self.tableroArray()[4] == "X" && self.tableroArray()[7] == "X") {
-			
-		}
-		//Columna 3
-		if (self.tableroArray()[2] == "X" && self.tableroArray()[5] == "X" && self.tableroArray()[8] == "X") {
-			
-		}
-		//Columna gana 0
-		//Columna 1
-		if (self.tableroArray()[0] == "O" && self.tableroArray()[3] == "O" && self.tableroArray()[6] == "O") {
-			
-		}
-		//Columna 2
-		if (self.tableroArray()[1] == "O" && self.tableroArray()[4] == "O" && self.tableroArray()[7] == "O") {
-			
-		}
-		//Columna 3
-		if (self.tableroArray()[2] == "O" && self.tableroArray()[5] == "O" && self.tableroArray()[8] == "O") {
-			
-		}
-	}
-	
-	self.getWinnerDiagonales = function () {
-		//Diagonales gana X
-		//Diagonal hacia abajo
-		if (self.tableroArray()[0] == "X" && self.tableroArray()[4] == "X" && self.tableroArray()[8] == "X") {
-			
-		}
-		//Diagonal hacia arriba
-		if (self.tableroArray()[6] == "X" && self.tableroArray()[4] == "X" && self.tableroArray()[2] == "X") {
-			
-		}
-		//Diagonales gana 0
-		//Diagonal hacia abajo
-		if (self.tableroArray()[0] == "O" && self.tableroArray()[4] == "O" && self.tableroArray()[8] == "O") {
-			
-		}
-		//Diagonal hacia arriba
-		if (self.tableroArray()[6] == "O" && self.tableroArray()[4] == "O" && self.tableroArray()[2] == "O") {
-			
-		}
-	}
-
-
-	
-	
-	
-	
-	
-	/*
-	 * self.funcion = function() { var players = data.players; for (var i=0; i<players.length;
-	 * i++) { var player1 = players[0]; var player2 = players[1]; }
-	 * sortearInicio(1,2); //return player N que empieza Syso("Empieza Player
-	 * N"); }
-	 */
-
-	/*
-	 * self.sortearJugador = function () { var players = data.players; }
-	 * 
-	 */
 }
 
 class Ficha {

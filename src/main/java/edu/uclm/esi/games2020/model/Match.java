@@ -67,10 +67,20 @@ public abstract class Match {
 		JSONObject jso = new JSONObject();
 		jso.put("type", "actualizacionTablero");
 		jso.put("tablero",this.getTablero());
+		jso.put("ganador", "");
+		for (User player : this.players)
+		if(IsWinner(player)) {
+			//jso.ganador = player.getUserName();
+			jso.put("ganador", player.getUserName());
+		}
+
 		for (User player : this.players) {
 			player.send(jso);
 		}
+		
 	}
+
+	protected abstract boolean IsWinner(User player);
 
 	protected abstract JSONArray getTablero();
 
