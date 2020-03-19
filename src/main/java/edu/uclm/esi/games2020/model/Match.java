@@ -52,7 +52,7 @@ public abstract class Match {
 	}
 
 	public void notifyStart() throws IOException {
-		
+
 		JSONObject jso = this.toJSON();
 		jso.put("type", "matchStarted");
 		jso.put("jugadorConElTurno", sortearTurno().getUserName());
@@ -66,19 +66,26 @@ public abstract class Match {
 	protected void actualizarTableros() throws IOException {
 		JSONObject jso = new JSONObject();
 		jso.put("type", "actualizacionTablero");
-		jso.put("tablero",this.getTablero());
+		jso.put("tablero", this.getTablero());
+		jso.put("jugadorConElTurno", cambiarTurno().getUserName());
 		jso.put("ganador", "");
+		jso.put("empate", "F");
 		for (User player : this.players)
-		if(IsWinner(player)) {
-			//jso.ganador = player.getUserName();
-			jso.put("ganador", player.getUserName());
-		}
+			if (IsWinner(player)) {
+				jso.put("ganador", player.getUserName());
+			} else if(isDraw())
+				jso.put("empate", "T");
+		
 
 		for (User player : this.players) {
 			player.send(jso);
 		}
-		
+
 	}
+
+	protected abstract boolean isDraw();
+
+	protected abstract User cambiarTurno();
 
 	protected abstract boolean IsWinner(User player);
 

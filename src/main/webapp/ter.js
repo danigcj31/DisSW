@@ -4,18 +4,13 @@ function ViewModel() {
 	self = this;
 	self.usuarios = ko.observableArray([]);
 	self.tableroArray = ko.observableArray([]);
-	self.turno = ko.observable(false);
-	self.fichaX = ko.observable("");
-	self.fichaO = ko.observable("");
-	self.jugadorTurno = ko.observable("");
-
+	self.mensaje = ko.observable("");
+	self.simbolo = ko.observable("");
+	
 	var idMatch = sessionStorage.idMatch;
 	var started = JSON.parse(sessionStorage.started);
 
-	self.mensaje = ko.observable("");
-	self.mensajeGanador = ko.observable("");
-	self.mensajePerdedor = ko.observable("");
-	self.simbolo = ko.observable("");
+	
 
 	if (started) {
 		self.mensaje("La partida " + idMatch + " ha comenzado");
@@ -40,7 +35,7 @@ function ViewModel() {
 
 		if (data.type == "matchStarted") {
 			self.mensaje("La partida ha empezado");
-			self.jugadorTurno(data.jugadorConElTurno + " tiene el turno. ");
+			self.mensaje(data.jugadorConElTurno + " tiene el turno. ");
 			
 			var players = data.players;
 			// Mete a los usuarios en la partida
@@ -52,23 +47,26 @@ function ViewModel() {
 			// Dibuja el tablero
 			var tablero = data.startData.tablero;
 			for (var i = 0; i < tablero.length; i++) {
-				//self.tableroArray.push(tablero[i]);
 				var ficha = new Ficha(tablero[i], i);
 				self.tableroArray.push(ficha);
 			}
 		
-		} else if (data.type == "actualizacionTablero"){
-			self.jugadorTurno(data.jugadorConElTurno + " tiene el turno.");
+		} else if (data.type == "actualizacionTablero"){	// ACTUALIZA EL
+															// TABLERO
 			var tablero = data.tablero;
 			for (var i = 0; i < tablero.length; i++) {
-				//self.tableroArray.push(tablero[i]);
 				var ficha = new Ficha(tablero[i], i);
 				self.tableroArray.replace(self.tableroArray()[i],ficha);
 			}
-			if(!data.ganador == ("")){
-				self.mensajeGanador("Ha ganado " + data.ganador);
-			}
-			//replace cada posicion de cada valor que llega del JSONArray 
+			if(!data.ganador == ""){
+				self.mensaje("Ha ganado " + data.ganador);
+			} else if(data.empate == "T")
+				self.mensaje("EMPATE");
+			else
+				self.mensaje(data.jugadorConElTurno + " tiene el turno.");
+				
+				
+			
 		} 
 	}
 	

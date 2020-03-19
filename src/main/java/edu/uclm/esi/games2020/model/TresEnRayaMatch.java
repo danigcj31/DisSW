@@ -32,11 +32,6 @@ public class TresEnRayaMatch extends Match {
 
 	}
 
-	protected boolean tieneElTurno(User user) {
-		return (this.getCurrentPlayer() == 0 && user == this.user)
-				|| (this.getCurrentPlayer() == 1 && user == this.user);
-	}
-
 	public int getCurrentPlayer() {
 		return 0;
 	}
@@ -59,10 +54,8 @@ public class TresEnRayaMatch extends Match {
 
 		JSONObject jso = new JSONObject();
 		JSONArray jsaTablero = new JSONArray();
-		User jugadorInicio = sortearTurno();
 		for (String ficha : this.tablero)
 			jsaTablero.put(ficha);
-		jso.put("jugadorInicio", jugadorInicio);
 		jso.put("tablero", jsaTablero);
 
 		return jso;
@@ -110,11 +103,11 @@ public class TresEnRayaMatch extends Match {
 	protected boolean IsWinner(User player) {
 		Boolean winner = false;
 
-		if(IsWinnerFilas(player))
-		winner = true;
-		else if(IsWinnerColumnas(player))
+		if (IsWinnerFilas(player))
 			winner = true;
-		else if(IsWinnerDiagonales(player))
+		else if (IsWinnerColumnas(player))
+			winner = true;
+		else if (IsWinnerDiagonales(player))
 			winner = true;
 
 		return winner;
@@ -128,13 +121,13 @@ public class TresEnRayaMatch extends Match {
 				IsWinner = true;
 			if (this.tablero.get(6).equals("X") && this.tablero.get(4).equals("X") && this.tablero.get(2).equals("X"))
 				IsWinner = true;
-			
+
 		} else {
 			if (this.tablero.get(0).equals("O") && this.tablero.get(4).equals("O") && this.tablero.get(8).equals("O"))
 				IsWinner = true;
 			if (this.tablero.get(6).equals("O") && this.tablero.get(4).equals("O") && this.tablero.get(2).equals("O"))
 				IsWinner = true;
-			
+
 		}
 
 		return IsWinner;
@@ -180,6 +173,27 @@ public class TresEnRayaMatch extends Match {
 		}
 
 		return IsWinner;
+	}
+
+	@Override
+	protected User cambiarTurno() {
+		if (this.jugadorConElTurno.equals(players.get(0)))
+			this.jugadorConElTurno = players.get(1);
+		else
+			this.jugadorConElTurno = players.get(0);
+
+		return this.jugadorConElTurno;
+	}
+
+	@Override
+	protected boolean isDraw() {
+		boolean isDraw = true;
+		
+		for(int i=0;i<this.tablero.size();i++) {
+			if(this.tablero.get(i).equals("-"))
+				isDraw = false;
+		}
+		return isDraw;
 	}
 
 }
