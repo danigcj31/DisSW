@@ -10,18 +10,30 @@
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
+ <title>TRES EN RAYA</title>
+ <style type="text/css">
+  body {
+  	font-family: Georgia, "Times New Roman", Times, serif;
+    color: black;
+    background-color: #A9D0F5 }
+  </style>
+
 </head>
 
 <body>
 	<div class="jumbotron text-center">
-		<h2>Juegos</h2>
+		<h2>TRES EN RAYA</h2>
 		<div data-bind="html : mensaje"></div>
 	</div>
-
+	<B>
+	<font size=4>
 	<!-- ko foreach : usuarios -->
 	<span data-bind="html : $data"></span>
 	<br>
 	<!-- /ko -->
+	</font>
+	</B>
+
 
 	<!-- ko foreach : { data: tableroArray, as : "ficha" } -->
 		<button>
@@ -31,8 +43,7 @@
 		<br>
 		<!-- /ko -->
 	<!-- /ko -->	
-
-
+	
 	<script src="https://knockoutjs.com/downloads/knockout-3.5.0.js"></script>
 	<script src="ter.js"></script>
 </body>
