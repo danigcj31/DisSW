@@ -115,4 +115,5 @@ public class Manager {
 		match.mover(user, posicion);
 		
 	}
+	
 }

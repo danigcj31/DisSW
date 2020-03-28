@@ -77,6 +77,7 @@ public class Controller {
 			JSONObject resultado = new JSONObject();
 			resultado.put("type", "match");
 			resultado.put("match", match.toJSON());
+			resultado.put("juego", game);
 			return resultado.toString();
 		}
 	}

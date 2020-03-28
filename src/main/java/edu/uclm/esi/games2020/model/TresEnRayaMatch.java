@@ -12,7 +12,6 @@ import edu.uclm.esi.games2020.model.Match;
 public class TresEnRayaMatch extends Match {
 
 	private List<String> tablero;
-	private User user;
 	private User jugadorConElTurno;
 
 	public TresEnRayaMatch() {
