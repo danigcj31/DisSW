@@ -3,13 +3,15 @@ var self;
 function ViewModel() {
 	self = this;
 	self.usuarios = ko.observableArray([]);
-	self.tableroArray = ko.observableArray([]);
 	self.mensaje = ko.observable("");
-	self.simbolo = ko.observable("");
+	self.fichasJugador = ko.observableArray([]);
+	self.fichasRival = ko.observableArray([]);
+	self.mesa = ko.observableArray([]);
+	self.taco = ko.observable("");
+	self.pasarTurno = ko.observable("");
 	
 	var idMatch = sessionStorage.idMatch;
 	var started = JSON.parse(sessionStorage.started);
-
 	
 
 	if (started) {
@@ -38,56 +40,29 @@ function ViewModel() {
 			self.mensaje(data.jugadorConElTurno + " tiene el turno. ");
 			
 			var players = data.players;
+			
 			// Mete a los usuarios en la partida
 			for (var i = 0; i < players.length; i++) {
 				var player = players[i];
 				self.usuarios.push(player.userName);
 			}
-			console.log(data);
-			// Dibuja el tablero
-			var tablero = data.startData.tablero;
-			for (var i = 0; i < tablero.length; i++) {
-				var ficha = new Ficha(tablero[i], i);
-				self.tableroArray.push(ficha);
+			console.log(data);			
+			var fichaJugador = data.startData.data;
+			// Dibuja las 7 fichas iniciales
+			for (var i = 0; i < fichaJugador.length; i++) {
+				var ficha = fichaJugador[i];
+				self.fichasJugador.push(ficha);
 			}
-		
-		} else if (data.type == "actualizacionTablero"){	// ACTUALIZA EL
-															// TABLERO
-			var tablero = data.tablero;
-			for (var i = 0; i < tablero.length; i++) {
-				var ficha = new Ficha(tablero[i], i);
-				self.tableroArray.replace(self.tableroArray()[i],ficha);
+			// Fichas del rival
+			for (var i = 0; i < fichaJugador.length; i++) {
+				var ficha = fichaJugador[i];
+				self.fichasRival.push(" ");
 			}
-			if(!data.ganador == ""){
-				self.mensaje("Ha ganado " + data.ganador);
-			} else if(data.empate == "T")
-				self.mensaje("EMPATE");
-			else
-				self.mensaje(data.jugadorConElTurno + " tiene el turno.");
-				
-				
-			
-		} 
+			self.taco("Robar");
+			self.pasarTurno("Pasar turno");
+		}
 	}
-	
 }
 
-class Ficha {
-	constructor (simbolo, index) {
-		this.simbolo = simbolo;
-		this.index = index;
-	}
-	colocarFicha () {
-		var posicion = this.index;	
-		var msg = {
-			type : "movimiento",
-			idMatch : sessionStorage.idMatch,
-			ficha: ""+posicion
-					
-		};
-		
-		self.sws.send(JSON.stringify(msg));
-	}
-}
 var vm = new ViewModel();
 ko.applyBindings(vm);

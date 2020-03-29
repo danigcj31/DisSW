@@ -10,7 +10,7 @@
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
- <title>TRES EN RAYA</title>
+ <title>DOMINÓ</title>
  <style type="text/css">
   body {
   	font-family: Georgia, "Times New Roman", Times, serif;
@@ -35,16 +35,35 @@
 	</B>
 
 
-	<!-- ko foreach : { data: tableroArray, as : "ficha" } -->
-		<button>
-		<label data-bind="click : colocarFicha, html : simbolo"></label>
-		</button>
-		<!-- ko if: ($index()+1)%3 === 0 -->
-		<br>
-		<!-- /ko -->
-	<!-- /ko -->	
+	<!-- ko foreach : { data: fichasRival, as :"fichas" } -->
+	<button style="width:45px; height:31px">
+	    <label> </label>
+	</button>
+	<!-- /ko -->
 	
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+
+	<!-- ko foreach : { data: fichasJugador, as :"fichas" } -->
+	<button>
+	    <label data-bind="html : numberL"></label>
+	    <label> | </label>
+	    <label data-bind="html : numberR"></label>
+	</button>
+	<!-- /ko -->
+	
+	<br>
+	<button data-bind="html: taco"> Robar </button>
+	<br>
+	<button data-bind="html: pasarTurno"> Pasar turno </button>
+		
 	<script src="https://knockoutjs.com/downloads/knockout-3.5.0.js"></script>
-	<script src="ter.js"></script>
+	<script src="domino.js"></script>
 </body>
 </html>
