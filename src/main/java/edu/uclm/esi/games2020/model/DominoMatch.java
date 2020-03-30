@@ -82,7 +82,7 @@ public class DominoMatch extends Match {
 
 	@Override
 	protected void mover(User user, String movimiento) throws Exception {
-		if (user != this.jugadorConElTurno)
+	if (user != this.jugadorConElTurno)
 			throw new Exception("No tienes el turno");
 		int posicion = Integer.parseInt(movimiento);
 		if (!this.tablero.get(posicion).equals("-"))
@@ -90,6 +90,7 @@ public class DominoMatch extends Match {
 		this.tablero.set(posicion, getFicha());
 		// actualizar los tableros a los clientes
 		this.actualizarTableros();
+		
 	}
 
 	private String getFicha() {

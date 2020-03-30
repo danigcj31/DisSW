@@ -9,6 +9,9 @@ function ViewModel() {
 	self.mesa = ko.observableArray([]);
 	self.taco = ko.observable("");
 	self.pasarTurno = ko.observable("");
+	self.fichaSeleccionada = ko.observable();
+	self.fichaDeMesa = ko.observable();
+	self.botonesVisibles = ko.observable(false);
 	
 	var idMatch = sessionStorage.idMatch;
 	var started = JSON.parse(sessionStorage.started);
@@ -47,19 +50,58 @@ function ViewModel() {
 				self.usuarios.push(player.userName);
 			}
 			console.log(data);			
-			var fichaJugador = data.startData.data;
+			var fichasJugador = data.startData.data;
 			// Dibuja las 7 fichas iniciales
-			for (var i = 0; i < fichaJugador.length; i++) {
-				var ficha = fichaJugador[i];
-				self.fichasJugador.push(ficha);
+			for (var i = 0; i < fichasJugador.length; i++) {
+				var ficha = fichasJugador[i];
+				self.fichasJugador.push(new Ficha(ficha.numberL, ficha.numberR));
 			}
 			// Fichas del rival
-			for (var i = 0; i < fichaJugador.length; i++) {
-				var ficha = fichaJugador[i];
+			for (var i = 0; i < fichasJugador.length; i++) {
+				var ficha = fichasJugador[i];
 				self.fichasRival.push(" ");
 			}
 			self.taco("Robar");
-			self.pasarTurno("Pasar turno");
+            self.pasarTurno("Pasar turno")
+		}
+	}
+}
+
+class Ficha {
+	constructor(numberLeft, numberRight){
+		this.numberLeft = numberLeft;
+		this.numberRight = numberRight;
+		this.enMesa = false;
+	}
+	
+	seleccionarFicha() {
+		if (self.mesa().length==0) {
+			for (var i=0; i<self.fichasJugador().length; i++) {
+				if (self.fichasJugador()==this) {
+					self.fichasJugador.splice(i, 1);
+					break;
+				}
+				self.mesa.push(this);
+				this.enMesa = true;
+			}					
+		} else if (this.enMesa) {
+			for (var i=0; i<self.fichasJugador().length; i++) {
+				if (self.fichasJugador()==self.fichaSeleccionada()) {
+					self.fichasJugador.splice(i, 1);
+					break;
+				}
+				self.mesa.push(self.fichaSeleccionada());
+				self.fichaSelccionada().enMesa = true;
+			}
+			var p = {
+				idMatch : session.idMatch,
+				type : "movimiento",
+				pongo : self.fichaSeleccionada(),
+				juntoA : this
+			};
+			self.sws.send(JSON.stringify(p));
+		} else {
+			self.fichaSeleccionada(this);
 		}
 	}
 }
