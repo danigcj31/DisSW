@@ -43,7 +43,7 @@
 	<div style="width:500px;height:100px;border:1px solid #000;">
 		<br>
 		<!-- ko foreach : { data: mesa, as :"ficha" }  -->
-		<button data-bind="seleccionarFicha">
+		<button data-bind="click : seleccionarFicha">
 		    <label data-bind="html : numberLeft"></label>
 		    <label> | </label>
 		    <label data-bind="html : numberRight"></label>
@@ -53,7 +53,7 @@
 	
 
 	<!-- ko foreach : { data: fichasJugador, as :"ficha" } -->
-	<button data-bind="seleccionarFicha">
+	<button data-bind="click : seleccionarFicha">
 	    <label data-bind="html : numberLeft"></label>
 	    <label> | </label>
 	    <label data-bind="html : numberRight"></label>

@@ -77,22 +77,24 @@ class Ficha {
 	seleccionarFicha() {
 		if (self.mesa().length==0) {
 			for (var i=0; i<self.fichasJugador().length; i++) {
-				if (self.fichasJugador()==this) {
+				if (self.fichasJugador()[i]==this) {
 					self.fichasJugador.splice(i, 1);
 					break;
 				}
+			}
 				self.mesa.push(this);
 				this.enMesa = true;
-			}					
+							
 		} else if (this.enMesa) {
 			for (var i=0; i<self.fichasJugador().length; i++) {
-				if (self.fichasJugador()==self.fichaSeleccionada()) {
+				if (self.fichasJugador()[i]==self.fichaSeleccionada()) {
 					self.fichasJugador.splice(i, 1);
 					break;
 				}
-				self.mesa.push(self.fichaSeleccionada());
-				self.fichaSelccionada().enMesa = true;
+				
 			}
+			self.mesa.push(self.fichaSeleccionada());
+			self.fichaSeleccionada().enMesa = true;
 			var p = {
 				idMatch : session.idMatch,
 				type : "movimiento",
