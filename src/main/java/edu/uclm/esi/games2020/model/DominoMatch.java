@@ -13,6 +13,7 @@ public class DominoMatch extends Match {
 	private TacoFichas tacoFichas;
 	private List<FichaDomino> fichasMesa;
 	private User jugadorConElTurno;
+	private List<FichaDomino> tableroDomino;
 
 	public DominoMatch() {
 		super();
@@ -81,14 +82,22 @@ public class DominoMatch extends Match {
 	}
 
 	@Override
-	protected void mover(User user, String pongo, String juntoA) throws Exception {
-	if (user != this.jugadorConElTurno)
-			throw new Exception("No tienes el turno");
-		int posicion = Integer.parseInt(movimiento);
-		if (!this.tablero.get(posicion).equals("-"))
-			throw new Exception("Casilla ocupada");
-		this.tablero.set(posicion, getFicha());
+	protected void mover(User user,String posicion, JSONObject pongo, JSONObject juntoA) throws Exception {
+	//if (user != this.jugadorConElTurno)
+			//throw new Exception("No tienes el turno");
+		
+//		if (!this.tablero.get(posicion).equals("-"))
+//			throw new Exception("Casilla ocupada");
+//		this.tablero.set(posicion, getFicha());
 		// actualizar los tableros a los clientes
+		if(pongo.similar(juntoA))
+		this.tableroDomino.add(new FichaDomino(Integer.parseInt(pongo.getString("numberLeft")),Integer.parseInt(pongo.getString("numberRight"))));
+		else {
+			this.tableroDomino.add(new FichaDomino(Integer.parseInt(pongo.getString("numberLeft")),Integer.parseInt(pongo.getString("numberRight"))));
+			this.tableroDomino.add(new FichaDomino(Integer.parseInt(juntoA.getString("numberLeft")),Integer.parseInt(juntoA.getString("numberRight"))));
+		}
+		
+			
 		this.actualizarTableros();
 		
 	}
@@ -114,25 +123,12 @@ public class DominoMatch extends Match {
 	protected JSONArray getTablero() {
 		// colocar las fichas en un JSONObject
 		JSONArray jsa = new JSONArray();
-		for (int i = 0; i < this.tablero.size(); i++) {
-			jsa.put(this.tablero.get(i));
+		for (int i = 0; i < this.tableroDomino.size(); i++) {
+			jsa.put(this.tableroDomino.get(i));
 		}
 		return jsa;
 	}
 
-	protected boolean IsWinner(User player) {
-		Boolean winner = false;
-
-		if (IsWinnerFilas(player))
-			winner = true;
-		else if (IsWinnerColumnas(player))
-			winner = true;
-		else if (IsWinnerDiagonales(player))
-			winner = true;
-
-		return winner;
-
-	}
 
 	@Override
 	protected User cambiarTurno() {

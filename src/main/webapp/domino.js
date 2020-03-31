@@ -63,7 +63,31 @@ function ViewModel() {
 			}
 			self.taco("Robar");
             self.pasarTurno("Pasar turno")
+		}else if (data.type == "actualizacionTablero"){	// ACTUALIZA EL
+															// TABLERO
+			var tablero = data.tablero;
+			for (var i = 0; i < tablero.length; i++) {
+				var ficha = new Ficha(tablero[i].numberLeft, tablero[i].numberRight);
+				self.mesa.push(ficha);
+				ficha.enMesa = true;
+				for (var i=0; i<self.fichasJugador().length; i++) {
+					if (self.fichasJugador()[i]==ficha) {
+						self.fichasJugador.splice(i, 1);
+						break;
+					}
+				}
+			}
+			if(!data.ganador == ""){
+				self.mensaje("Ha ganado " + data.ganador);
+			} else if(data.empate == "T")
+				self.mensaje("EMPATE");
+			else
+				self.mensaje(data.jugadorConElTurno + " tiene el turno.");
+				
+				
+			
 		}
+		
 	}
 }
 
@@ -76,23 +100,23 @@ class Ficha {
 	
 	seleccionarFicha() {
 		if (self.mesa().length==0) {
-			for (var i=0; i<self.fichasJugador().length; i++) {
-				if (self.fichasJugador()[i]==this) {
-					self.fichasJugador.splice(i, 1);
-					break;
-				}
-			}
-				self.mesa.push(this);
-				this.enMesa = true;
 				var p = {
 						idMatch : sessionStorage.idMatch,
-						type : "movimiento",
+						type : "movimientoD",
 						pongo : this,
 						juntoA : this
 					};
 					self.sws.send(JSON.stringify(p));
 							
 		} else if (this.enMesa) {
+			var p = {
+					idMatch : sessionStorage.idMatch,
+					type : "movimientoD",
+					pongo : self.fichaSeleccionada(),
+					juntoA : this
+				};
+				self.sws.send(JSON.stringify(p));
+				
 			for (var i=0; i<self.fichasJugador().length; i++) {
 				if (self.fichasJugador()[i]==self.fichaSeleccionada()) {
 					self.fichasJugador.splice(i, 1);
@@ -102,13 +126,7 @@ class Ficha {
 			}
 			self.mesa.push(self.fichaSeleccionada());
 			self.fichaSeleccionada().enMesa = true;
-			var p = {
-				idMatch : sessionStorage.idMatch,
-				type : "movimientoD",
-				pongo : self.fichaSeleccionada(),
-				juntoA : this
-			};
-			self.sws.send(JSON.stringify(p));
+			
 		} else {
 			self.fichaSeleccionada(this);
 		}

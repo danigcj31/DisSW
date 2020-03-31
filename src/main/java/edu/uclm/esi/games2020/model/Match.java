@@ -107,7 +107,7 @@ public abstract class Match {
 		return this.readyPlayers == game.requiredPlayers;
 	}
 
-	protected abstract void mover(User user, String movimiento, String juntoA) throws Exception;
+	protected abstract void mover(User user, String movimiento,JSONObject pongo, JSONObject juntoA) throws Exception;
 	
 	
 }
