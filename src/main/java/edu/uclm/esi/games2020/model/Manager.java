@@ -110,10 +110,14 @@ public class Manager {
 		return this.connectedUsersByHttpSession.get(httpSessionId);
 	}
 
-	public void mover(String idMatch, User user, String posicion) throws Exception {
-		Match match = this.inPlayMatches.get(idMatch);
-		match.mover(user, posicion);
-		
+	public void mover(String idMatch, User user, String posicion, String juntoA) throws Exception {
+		if (juntoA.equals("")) {
+			Match match = this.inPlayMatches.get(idMatch);
+			match.mover(user, posicion,"");
+		} else {
+			Match match = this.inPlayMatches.get(idMatch);
+			match.mover(user, posicion, juntoA);
+		}
 	}
-	
+
 }

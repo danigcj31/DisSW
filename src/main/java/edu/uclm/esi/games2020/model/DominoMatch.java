@@ -81,7 +81,7 @@ public class DominoMatch extends Match {
 	}
 
 	@Override
-	protected void mover(User user, String movimiento) throws Exception {
+	protected void mover(User user, String pongo, String juntoA) throws Exception {
 	if (user != this.jugadorConElTurno)
 			throw new Exception("No tienes el turno");
 		int posicion = Integer.parseInt(movimiento);

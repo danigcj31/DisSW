@@ -84,6 +84,13 @@ class Ficha {
 			}
 				self.mesa.push(this);
 				this.enMesa = true;
+				var p = {
+						idMatch : sessionStorage.idMatch,
+						type : "movimiento",
+						pongo : this,
+						juntoA : this
+					};
+					self.sws.send(JSON.stringify(p));
 							
 		} else if (this.enMesa) {
 			for (var i=0; i<self.fichasJugador().length; i++) {
@@ -96,8 +103,8 @@ class Ficha {
 			self.mesa.push(self.fichaSeleccionada());
 			self.fichaSeleccionada().enMesa = true;
 			var p = {
-				idMatch : session.idMatch,
-				type : "movimiento",
+				idMatch : sessionStorage.idMatch,
+				type : "movimientoD",
 				pongo : self.fichaSeleccionada(),
 				juntoA : this
 			};
