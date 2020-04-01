@@ -70,11 +70,11 @@ public abstract class Match {
 		jso.put("jugadorConElTurno", cambiarTurno().getUserName());
 		jso.put("ganador", "");
 		jso.put("empate", "F");
-		for (User player : this.players)
-			if (IsWinner(player)) {
-				jso.put("ganador", player.getUserName());
-			} else if(isDraw())
-				jso.put("empate", "T");
+//		for (User player : this.players)
+//			if (IsWinner(player)) {
+//				jso.put("ganador", player.getUserName());
+//			} else if(isDraw())
+//				jso.put("empate", "T");
 		
 
 		for (User player : this.players) {

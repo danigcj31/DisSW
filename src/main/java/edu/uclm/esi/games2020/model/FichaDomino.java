@@ -15,8 +15,8 @@ public class FichaDomino {
 
 	public JSONObject toJSON() {
 		JSONObject jso = new JSONObject();
-		jso.put("numberL", this.numberL);
-		jso.put("numberR", this.numberR);
+		jso.put("numberLeft", this.numberL);
+		jso.put("numberRight", this.numberR);
 		return jso;
 	}
 

@@ -54,7 +54,7 @@ function ViewModel() {
 			// Dibuja las 7 fichas iniciales
 			for (var i = 0; i < fichasJugador.length; i++) {
 				var ficha = fichasJugador[i];
-				self.fichasJugador.push(new Ficha(ficha.numberL, ficha.numberR));
+				self.fichasJugador.push(new Ficha(ficha.numberLeft, ficha.numberRight));
 			}
 			// Fichas del rival
 			for (var i = 0; i < fichasJugador.length; i++) {
@@ -67,15 +67,18 @@ function ViewModel() {
 															// TABLERO
 			var tablero = data.tablero;
 			for (var i = 0; i < tablero.length; i++) {
-				var ficha = new Ficha(tablero[i].numberLeft, tablero[i].numberRight);
-				self.mesa.push(ficha);
-				ficha.enMesa = true;
-				for (var i=0; i<self.fichasJugador().length; i++) {
-					if (self.fichasJugador()[i]==ficha) {
-						self.fichasJugador.splice(i, 1);
-						break;
+				if(i >= self.mesa().length){
+					var ficha = new Ficha(tablero[i].numberLeft, tablero[i].numberRight);
+					self.mesa.push(ficha);
+					ficha.enMesa = true;
+					for (var i=0; i<self.fichasJugador().length; i++) {
+						if (self.fichasJugador()[i].numberLeft==ficha.numberLeft && self.fichasJugador()[i].numberRight==ficha.numberRight ) {
+							self.fichasJugador.splice(i, 1);
+							break;
+						}
 					}
 				}
+				
 			}
 			if(!data.ganador == ""){
 				self.mensaje("Ha ganado " + data.ganador);
@@ -116,16 +119,7 @@ class Ficha {
 					juntoA : this
 				};
 				self.sws.send(JSON.stringify(p));
-				
-			for (var i=0; i<self.fichasJugador().length; i++) {
-				if (self.fichasJugador()[i]==self.fichaSeleccionada()) {
-					self.fichasJugador.splice(i, 1);
-					break;
-				}
-				
-			}
-			self.mesa.push(self.fichaSeleccionada());
-			self.fichaSeleccionada().enMesa = true;
+		
 			
 		} else {
 			self.fichaSeleccionada(this);

@@ -20,6 +20,7 @@ public class DominoMatch extends Match {
 		this.tacoFichas = new TacoFichas();
 		this.tacoFichas.suffle();
 		this.fichasMesa = new ArrayList<>();
+		this.tableroDomino = new ArrayList<>();
 		for (int i = 0; i < 14; i++)
 			this.fichasMesa.add(this.tacoFichas.getFichaDomino());
 
@@ -49,7 +50,7 @@ public class DominoMatch extends Match {
 		JSONArray jsaMesa = new JSONArray();
 		for (FichaDomino ficha : this.fichasMesa)
 			jsaMesa.put(ficha);
-		
+
 		FichaDomino ficha1 = this.tacoFichas.getFichaDomino();
 		FichaDomino ficha2 = this.tacoFichas.getFichaDomino();
 		FichaDomino ficha3 = this.tacoFichas.getFichaDomino();
@@ -57,7 +58,7 @@ public class DominoMatch extends Match {
 		FichaDomino ficha5 = this.tacoFichas.getFichaDomino();
 		FichaDomino ficha6 = this.tacoFichas.getFichaDomino();
 		FichaDomino ficha7 = this.tacoFichas.getFichaDomino();
-		
+
 		ficha1.setState(player.getState());
 		ficha2.setState(player.getState());
 		ficha3.setState(player.getState());
@@ -65,7 +66,7 @@ public class DominoMatch extends Match {
 		ficha5.setState(player.getState());
 		ficha6.setState(player.getState());
 		ficha7.setState(player.getState());
-		
+
 		JSONArray jsaFichasDelJugador = new JSONArray();
 		jsaFichasDelJugador.put(ficha1.toJSON());
 		jsaFichasDelJugador.put(ficha2.toJSON());
@@ -74,7 +75,7 @@ public class DominoMatch extends Match {
 		jsaFichasDelJugador.put(ficha5.toJSON());
 		jsaFichasDelJugador.put(ficha6.toJSON());
 		jsaFichasDelJugador.put(ficha7.toJSON());
-		
+
 		jso.put("data", jsaFichasDelJugador);
 		jso.put("mesa", jsaMesa);
 
@@ -82,24 +83,19 @@ public class DominoMatch extends Match {
 	}
 
 	@Override
-	protected void mover(User user,String posicion, JSONObject pongo, JSONObject juntoA) throws Exception {
-	//if (user != this.jugadorConElTurno)
-			//throw new Exception("No tienes el turno");
-		
+	protected void mover(User user, String posicion, JSONObject pongo, JSONObject juntoA) throws Exception {
+		// if (user != this.jugadorConElTurno)
+		// throw new Exception("No tienes el turno");
+
 //		if (!this.tablero.get(posicion).equals("-"))
 //			throw new Exception("Casilla ocupada");
 //		this.tablero.set(posicion, getFicha());
 		// actualizar los tableros a los clientes
-		if(pongo.similar(juntoA))
-		this.tableroDomino.add(new FichaDomino(Integer.parseInt(pongo.getString("numberLeft")),Integer.parseInt(pongo.getString("numberRight"))));
-		else {
-			this.tableroDomino.add(new FichaDomino(Integer.parseInt(pongo.getString("numberLeft")),Integer.parseInt(pongo.getString("numberRight"))));
-			this.tableroDomino.add(new FichaDomino(Integer.parseInt(juntoA.getString("numberLeft")),Integer.parseInt(juntoA.getString("numberRight"))));
-		}
-		
-			
+
+		this.tableroDomino.add(new FichaDomino(pongo.getInt("numberLeft"), pongo.getInt("numberRight")));
+
 		this.actualizarTableros();
-		
+
 	}
 
 	private String getFicha() {
@@ -124,11 +120,10 @@ public class DominoMatch extends Match {
 		// colocar las fichas en un JSONObject
 		JSONArray jsa = new JSONArray();
 		for (int i = 0; i < this.tableroDomino.size(); i++) {
-			jsa.put(this.tableroDomino.get(i));
+			jsa.put(this.tableroDomino.get(i).toJSON());
 		}
 		return jsa;
 	}
-
 
 	@Override
 	protected User cambiarTurno() {
@@ -149,6 +144,12 @@ public class DominoMatch extends Match {
 				isDraw = false;
 		}
 		return isDraw;
+	}
+
+	@Override
+	protected boolean IsWinner(User player) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
