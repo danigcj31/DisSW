@@ -66,17 +66,28 @@ function ViewModel() {
 		}else if (data.type == "actualizacionTablero"){	// ACTUALIZA EL
 															// TABLERO
 			var tablero = data.tablero;
+			var contFichas = 0;
 			for (var i = 0; i < tablero.length; i++) {
 				if(i >= self.mesa().length){
+					contFichas++;
 					var ficha = new Ficha(tablero[i].numberLeft, tablero[i].numberRight);
 					self.mesa.push(ficha);
 					ficha.enMesa = true;
+					// ELIMINAR NUESTRA FICHA
+					var contMisFichas = 0;
 					for (var i=0; i<self.fichasJugador().length; i++) {
 						if (self.fichasJugador()[i].numberLeft==ficha.numberLeft && self.fichasJugador()[i].numberRight==ficha.numberRight ) {
 							self.fichasJugador.splice(i, 1);
+							cont++;
 							break;
 						}
 					}
+					// ELIMINAR LA FICHA DEL RIVAL
+					if(contMisFichas==0){
+						for(var i =0; i<contFichas;i++){
+							self.fichasRival.pop();
+						}
+				}
 				}
 				
 			}
@@ -93,6 +104,7 @@ function ViewModel() {
 		
 	}
 }
+
 
 class Ficha {
 	constructor(numberLeft, numberRight){
