@@ -195,4 +195,17 @@ public class TresEnRayaMatch extends Match {
 		return isDraw;
 	}
 
+	@Override
+	protected void comprobarTurno(User usuario) throws Exception {
+		if (this.jugadorConElTurno!=usuario)
+			throw new Exception("No tienes el turno");
+	}
+
+	@Override
+	protected void comprobarLegalidad(JSONObject jsoMovimiento, User usuario) throws Exception {
+		int posicion = jsoMovimiento.getInt("posicion");
+		if (!this.tablero.get(posicion).equals("-"))
+			throw new Exception("Casilla ocupada");
+	}
+
 }

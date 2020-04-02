@@ -72,23 +72,23 @@ function ViewModel() {
 				self.mesa.push(ficha);
 				ficha.enMesa = true;
 				if (self.mesa().length != 1) {
-					for (var i = 0; i < self.mesa().length; i++) {
-						if (i == 0) {
-							self.mesa()[i].ocupadoRight = true;
-						} else if (i == self.mesa().length-1) {
-							self.mesa()[i].ocupadoLeft = true;
+					for (var j = 0; j < self.mesa().length; j++) {
+						if (j == 0) {
+							self.mesa()[j].ocupadoRight = true;
+						} else if (j == self.mesa().length-1) {
+							self.mesa()[j].ocupadoLeft = true;
 						}
 						else {
-							self.mesa()[i].ocupadoRight = true;
-							self.mesa()[i].ocupadoLeft = true;
+							self.mesa()[j].ocupadoRight = true;
+							self.mesa()[j].ocupadoLeft = true;
 						}
 					}
 				}
 					// ELIMINAR NUESTRA FICHA
 				var contMisFichas = 0;
-				for (var i=0; i<self.fichasJugador().length; i++) {
-					if (self.fichasJugador()[i].numberLeft==ficha.numberLeft && self.fichasJugador()[i].numberRight==ficha.numberRight ) {
-						self.fichasJugador.splice(i, 1);
+				for (var k=0; k<self.fichasJugador().length; k++) {
+					if (self.fichasJugador()[k].numberLeft==ficha.numberLeft && self.fichasJugador()[k].numberRight==ficha.numberRight ) {
+						self.fichasJugador.splice(k, 1);
 						contMisFichas++;
 						break;
 					}

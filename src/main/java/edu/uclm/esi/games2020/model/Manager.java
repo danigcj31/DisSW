@@ -120,4 +120,9 @@ public class Manager {
 		}
 	}
 
+	public void mover(JSONObject jsoMovimiento, User usuario) {
+		Match match = this.inPlayMatches.get(jsoMovimiento.getString("idMatch"));
+		match.mover(jsoMovimiento, usuario);
+	}
+
 }

@@ -108,6 +108,17 @@ public abstract class Match {
 	}
 
 	protected abstract void mover(User user, String movimiento,JSONObject pongo, JSONObject juntoA) throws Exception;
+
+	protected void mover(JSONObject jsoMovimiento, User usuario) throws Exception {
+		comprobarTurno(usuario);
+		comprobarLegalidad(jsoMovimiento, usuario);
+		actualizarTablero(jsoMovimiento, usuario);
+		notificarAClientes(jsoMovimiento);
+	}
+
+	protected abstract void comprobarLegalidad(JSONObject jsoMovimiento, User usuario) throws Exception;
+
+	protected abstract void comprobarTurno(User usuario) throws Exception;
 	
 	
 }

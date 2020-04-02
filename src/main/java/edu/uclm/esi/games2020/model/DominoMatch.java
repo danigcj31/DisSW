@@ -85,31 +85,38 @@ public class DominoMatch extends Match {
 	@Override
 	protected void mover(User user, String posicion, JSONObject pongo, JSONObject juntoA) throws Exception {
 		boolean valido = false;
-		//Primera ficha
-		if (pongo.getInt("numberLeft") == juntoA.getInt("numberLeft") && pongo.getInt("numberRight") == juntoA.getInt("numberRight")) {
+
+		// Primera ficha
+		if (pongo.getInt("numberLeft") == juntoA.getInt("numberLeft")
+				&& pongo.getInt("numberRight") == juntoA.getInt("numberRight")) {
 			this.tableroDomino.add(new FichaDomino(pongo.getInt("numberLeft"), pongo.getInt("numberRight")));
 			valido = true;
 		}
-		// DERECHA-IZQUIERDA
-		else if (pongo.getInt("numberRight") == juntoA.getInt("numberLeft")) {
-			this.tableroDomino.add(0, new FichaDomino(pongo.getInt("numberLeft"), pongo.getInt("numberRight")));
-			valido = true;
-		} 
-		// IZQUIERDA-DERECHA
-		else if (pongo.getInt("numberLeft") == juntoA.getInt("numberRight")) {
-			this.tableroDomino.add(new FichaDomino(pongo.getInt("numberLeft"), pongo.getInt("numberRight")));
-			valido = true;
+		else if (juntoA.getString("ocupadoRight").equals("true")) {
+			// DERECHA-IZQUIERDA
+			if (pongo.getInt("numberRight") == juntoA.getInt("numberLeft")) {
+				this.tableroDomino.add(0, new FichaDomino(pongo.getInt("numberLeft"), pongo.getInt("numberRight")));
+				valido = true;
+				// IZQUIERDA-IZQUIERDA (vuelta)
+			} else if (pongo.getInt("numberLeft") == juntoA.getInt("numberLeft")) {
+				this.tableroDomino.add(0, new FichaDomino(pongo.getInt("numberRight"), pongo.getInt("numberLeft")));
+				valido = true;
+			}
+
+		} else if (juntoA.getString("ocupadoLeft").equals("true")) {
+
+			// IZQUIERDA-DERECHA
+			if (pongo.getInt("numberLeft") == juntoA.getInt("numberRight")) {
+				this.tableroDomino.add(new FichaDomino(pongo.getInt("numberLeft"), pongo.getInt("numberRight")));
+				valido = true;
+			}
+			// DERECHA-DERECHA (vuelta)
+			else if (pongo.getInt("numberRight") == juntoA.getInt("numberRight")) {
+				this.tableroDomino.add(new FichaDomino(pongo.getInt("numberRight"), pongo.getInt("numberLeft")));
+				valido = true;
+			}
 		}
-		//IZQUIERDA-IZQUIERDA (vuelta)
-		else if (pongo.getInt("numberLeft") == juntoA.getInt("numberLeft")) {
-			this.tableroDomino.add(0, new FichaDomino(pongo.getInt("numberRight"), pongo.getInt("numberLeft")));
-			valido = true;
-		}
-		//DERECHA-DERECHA (vuelta)
-		else if (pongo.getInt("numberRight") == juntoA.getInt("numberRight")) {
-			this.tableroDomino.add(new FichaDomino(pongo.getInt("numberRight"), pongo.getInt("numberLeft")));
-			valido = true;
-		}			
+
 		if (valido) {
 			this.actualizarTableros();
 		} else {
@@ -154,7 +161,6 @@ public class DominoMatch extends Match {
 
 		return this.jugadorConElTurno;
 	}
-
 
 	@Override
 	protected boolean IsWinner(User player) {
