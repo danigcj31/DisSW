@@ -11,7 +11,7 @@ function ViewModel() {
 	self.pasarTurno = ko.observable("");
 	self.fichaSeleccionada = ko.observable();
 	self.fichaDeMesa = ko.observable();
-	self.botonesVisibles = ko.observable(false);
+	self.mostrar = ko.observable(false);
 	
 	var idMatch = sessionStorage.idMatch;
 	var started = JSON.parse(sessionStorage.started);
@@ -61,8 +61,9 @@ function ViewModel() {
 				var ficha = fichasJugador[i];
 				self.fichasRival.push(" ");
 			}
-			self.taco("Robar");
-            self.pasarTurno("Pasar turno")
+			self.mostrar(true);
+			//self.taco("Robar");
+            //self.pasarTurno("Pasar turno")
 		}else if (data.type == "actualizacionTablero"){	// ACTUALIZA EL
 															// TABLERO
 			var tablero = data.tablero;

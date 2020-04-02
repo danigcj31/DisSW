@@ -28,19 +28,27 @@
 	<B>
 	<font size=4>
 	<!-- ko foreach : usuarios -->
-	<span data-bind="html : $data"></span>
-	<br>
+		<span data-bind="html : $data"></span>
+		<!-- ko if: $index()=== 0 -->
+			<label> VS </label>
+		<!-- /ko -->
+	 
 	<!-- /ko -->
 	</font>
 	</B>
-
+<br>
+<br>
+<br>
+<br>
 
 	<!-- ko foreach : { data: fichasRival, as :"fichas" } -->
 	<button style="width:45px; height:31px">
 	    <label> </label>
 	</button>
 	<!-- /ko -->
-	<div style="width:500px;height:100px;border:1px solid #000;">
+	<br>
+	<br>
+	<div data-bind="visible: mostrar" style="width:100%;height:100px;border:1px solid #000;">
 		<br>
 		<!-- ko foreach : { data: mesa, as :"ficha" }  -->
 		<button data-bind="click : seleccionarFicha">
@@ -51,7 +59,7 @@
 	<!-- /ko -->
 	</div>
 	
-
+<br>
 	<!-- ko foreach : { data: fichasJugador, as :"ficha" } -->
 	<button data-bind="click : seleccionarFicha">
 	    <label data-bind="html : numberLeft"></label>
@@ -59,11 +67,13 @@
 	    <label data-bind="html : numberRight"></label>
 	</button>
 	<!-- /ko -->
-	
 	<br>
-	<button data-bind="html: taco"> Robar </button>
 	<br>
-	<button data-bind="html: pasarTurno"> Pasar turno </button>
+	<br>
+	<button data-bind="visible: mostrar"> Robar </button>
+	<br>
+	<br>
+	<button data-bind="visible: mostrar"> Pasar turno </button>
 		
 	<script src="https://knockoutjs.com/downloads/knockout-3.5.0.js"></script>
 	<script src="domino.js"></script>
