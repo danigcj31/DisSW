@@ -64,33 +64,39 @@ function ViewModel() {
 			self.mostrar(true);
 			//self.taco("Robar");
             //self.pasarTurno("Pasar turno")
-		}else if (data.type == "actualizacionTablero"){	// ACTUALIZA EL
-															// TABLERO
+		}else if (data.type == "actualizacionTablero"){	// ACTUALIZA EL TABLERO
 			var tablero = data.tablero;
-			var contFichas = 0;
+			self.mesa.removeAll();
 			for (var i = 0; i < tablero.length; i++) {
-				if(i >= self.mesa().length){
-					contFichas++;
-					var ficha = new Ficha(tablero[i].numberLeft, tablero[i].numberRight);
-					self.mesa.push(ficha);
-					ficha.enMesa = true;
-					// ELIMINAR NUESTRA FICHA
-					var contMisFichas = 0;
-					for (var i=0; i<self.fichasJugador().length; i++) {
-						if (self.fichasJugador()[i].numberLeft==ficha.numberLeft && self.fichasJugador()[i].numberRight==ficha.numberRight ) {
-							self.fichasJugador.splice(i, 1);
-							cont++;
-							break;
+				var ficha = new Ficha(tablero[i].numberLeft, tablero[i].numberRight);
+				self.mesa.push(ficha);
+				ficha.enMesa = true;
+				if (self.mesa().length != 1) {
+					for (var i = 0; i < self.mesa().length; i++) {
+						if (i == 0) {
+							self.mesa()[i].ocupadoRight = true;
+						} else if (i == self.mesa().length-1) {
+							self.mesa()[i].ocupadoLeft = true;
+						}
+						else {
+							self.mesa()[i].ocupadoRight = true;
+							self.mesa()[i].ocupadoLeft = true;
 						}
 					}
-					// ELIMINAR LA FICHA DEL RIVAL
-					if(contMisFichas==0){
-						for(var i =0; i<contFichas;i++){
-							self.fichasRival.pop();
-						}
 				}
+					// ELIMINAR NUESTRA FICHA
+				var contMisFichas = 0;
+				for (var i=0; i<self.fichasJugador().length; i++) {
+					if (self.fichasJugador()[i].numberLeft==ficha.numberLeft && self.fichasJugador()[i].numberRight==ficha.numberRight ) {
+						self.fichasJugador.splice(i, 1);
+						contMisFichas++;
+						break;
+					}
 				}
-				
+				// ELIMINAR LA FICHA DEL RIVAL
+				if(contMisFichas==0){
+					self.fichasRival.pop();
+				}
 			}
 			if(!data.ganador == ""){
 				self.mensaje("Ha ganado " + data.ganador);
@@ -98,9 +104,6 @@ function ViewModel() {
 				self.mensaje("EMPATE");
 			else
 				self.mensaje(data.jugadorConElTurno + " tiene el turno.");
-				
-				
-			
 		}
 		
 	}
@@ -112,6 +115,8 @@ class Ficha {
 		this.numberLeft = numberLeft;
 		this.numberRight = numberRight;
 		this.enMesa = false;
+		this.ocupadoLeft = false;
+		this.ocupadoRight = false;
 	}
 	
 	seleccionarFicha() {
@@ -120,7 +125,9 @@ class Ficha {
 						idMatch : sessionStorage.idMatch,
 						type : "movimientoD",
 						pongo : this,
-						juntoA : this
+						juntoA : this,
+						ocupadoLeft : false,
+						ocupadoRight : false
 					};
 					self.sws.send(JSON.stringify(p));
 							
@@ -129,7 +136,9 @@ class Ficha {
 					idMatch : sessionStorage.idMatch,
 					type : "movimientoD",
 					pongo : self.fichaSeleccionada(),
-					juntoA : this
+					juntoA : this,
+					ocupadoLeft : false,
+					ocupadoRight : false
 				};
 				self.sws.send(JSON.stringify(p));
 		

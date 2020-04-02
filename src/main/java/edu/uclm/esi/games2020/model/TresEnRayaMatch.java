@@ -61,7 +61,7 @@ public class TresEnRayaMatch extends Match {
 	}
 
 	@Override
-	protected void mover(User user, String movimiento,String juntoA) throws Exception {
+	protected void mover(User user, String movimiento, JSONObject pongo, JSONObject junto) throws Exception {
 		if (user != this.jugadorConElTurno)
 			throw new Exception("No tienes el turno");
 		int posicion = Integer.parseInt(movimiento);

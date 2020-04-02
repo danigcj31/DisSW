@@ -84,17 +84,37 @@ public class DominoMatch extends Match {
 
 	@Override
 	protected void mover(User user, String posicion, JSONObject pongo, JSONObject juntoA) throws Exception {
-		// if (user != this.jugadorConElTurno)
-		// throw new Exception("No tienes el turno");
-
-//		if (!this.tablero.get(posicion).equals("-"))
-//			throw new Exception("Casilla ocupada");
-//		this.tablero.set(posicion, getFicha());
-		// actualizar los tableros a los clientes
-
-		this.tableroDomino.add(new FichaDomino(pongo.getInt("numberLeft"), pongo.getInt("numberRight")));
-
-		this.actualizarTableros();
+		boolean valido = false;
+		//Primera ficha
+		if (pongo.getInt("numberLeft") == juntoA.getInt("numberLeft") && pongo.getInt("numberRight") == juntoA.getInt("numberRight")) {
+			this.tableroDomino.add(new FichaDomino(pongo.getInt("numberLeft"), pongo.getInt("numberRight")));
+			valido = true;
+		}
+		// DERECHA-IZQUIERDA
+		else if (pongo.getInt("numberRight") == juntoA.getInt("numberLeft")) {
+			this.tableroDomino.add(0, new FichaDomino(pongo.getInt("numberLeft"), pongo.getInt("numberRight")));
+			valido = true;
+		} 
+		// IZQUIERDA-DERECHA
+		else if (pongo.getInt("numberLeft") == juntoA.getInt("numberRight")) {
+			this.tableroDomino.add(new FichaDomino(pongo.getInt("numberLeft"), pongo.getInt("numberRight")));
+			valido = true;
+		}
+		//IZQUIERDA-IZQUIERDA (vuelta)
+		else if (pongo.getInt("numberLeft") == juntoA.getInt("numberLeft")) {
+			this.tableroDomino.add(0, new FichaDomino(pongo.getInt("numberRight"), pongo.getInt("numberLeft")));
+			valido = true;
+		}
+		//DERECHA-DERECHA (vuelta)
+		else if (pongo.getInt("numberRight") == juntoA.getInt("numberRight")) {
+			this.tableroDomino.add(new FichaDomino(pongo.getInt("numberRight"), pongo.getInt("numberLeft")));
+			valido = true;
+		}			
+		if (valido) {
+			this.actualizarTableros();
+		} else {
+			throw new Exception("Movimiento no válido");
+		}
 
 	}
 
@@ -135,19 +155,15 @@ public class DominoMatch extends Match {
 		return this.jugadorConElTurno;
 	}
 
-	@Override
-	protected boolean isDraw() {
-		boolean isDraw = true;
-
-		for (int i = 0; i < this.tablero.size(); i++) {
-			if (this.tablero.get(i).equals("-"))
-				isDraw = false;
-		}
-		return isDraw;
-	}
 
 	@Override
 	protected boolean IsWinner(User player) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean isDraw() {
 		// TODO Auto-generated method stub
 		return false;
 	}
