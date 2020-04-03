@@ -62,8 +62,8 @@ function ViewModel() {
 				self.fichasRival.push(" ");
 			}
 			self.mostrar(true);
-			//self.taco("Robar");
-            //self.pasarTurno("Pasar turno")
+			// self.taco("Robar");
+            // self.pasarTurno("Pasar turno")
 		}else if (data.type == "actualizacionTablero"){	// ACTUALIZA EL TABLERO
 			var tablero = data.tablero;
 			self.mesa.removeAll();
@@ -87,7 +87,7 @@ function ViewModel() {
 					// ELIMINAR NUESTRA FICHA
 				var contMisFichas = 0;
 				for (var k=0; k<self.fichasJugador().length; k++) {
-					if (self.fichasJugador()[k].numberLeft==ficha.numberLeft && self.fichasJugador()[k].numberRight==ficha.numberRight ) {
+					if ((self.fichasJugador()[k].numberLeft==ficha.numberLeft && self.fichasJugador()[k].numberRight==ficha.numberRight) || (self.fichasJugador()[k].numberRight==ficha.numberLeft && self.fichasJugador()[k].numberLeft==ficha.numberRight) ) {
 						self.fichasJugador.splice(k, 1);
 						contMisFichas++;
 						break;
@@ -123,7 +123,7 @@ class Ficha {
 		if (self.mesa().length==0) {
 				var p = {
 						idMatch : sessionStorage.idMatch,
-						type : "movimientoD",
+						type : "movimiento",
 						pongo : this,
 						juntoA : this,
 						ocupadoLeft : false,
@@ -134,7 +134,7 @@ class Ficha {
 		} else if (this.enMesa) {
 			var p = {
 					idMatch : sessionStorage.idMatch,
-					type : "movimientoD",
+					type : "movimiento",
 					pongo : self.fichaSeleccionada(),
 					juntoA : this,
 					ocupadoLeft : false,

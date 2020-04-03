@@ -80,7 +80,7 @@ class Ficha {
 	colocarFicha () {
 		var posicion = this.index;	
 		var msg = {
-			type : "movimientoT",
+			type : "movimiento",
 			idMatch : sessionStorage.idMatch,
 			ficha: ""+posicion
 					

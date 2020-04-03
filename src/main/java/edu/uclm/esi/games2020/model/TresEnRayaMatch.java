@@ -60,18 +60,6 @@ public class TresEnRayaMatch extends Match {
 		return jso;
 	}
 
-	@Override
-	protected void mover(User user, String movimiento, JSONObject pongo, JSONObject junto) throws Exception {
-		if (user != this.jugadorConElTurno)
-			throw new Exception("No tienes el turno");
-		int posicion = Integer.parseInt(movimiento);
-		if (!this.tablero.get(posicion).equals("-"))
-			throw new Exception("Casilla ocupada");
-		this.tablero.set(posicion, getFicha());
-		// actualizar los tableros a los clientes
-		this.actualizarTableros();
-	}
-
 	private String getFicha() {
 		if (this.jugadorConElTurno == this.players.get(0))
 			return "X";
@@ -187,9 +175,9 @@ public class TresEnRayaMatch extends Match {
 	@Override
 	protected boolean isDraw() {
 		boolean isDraw = true;
-		
-		for(int i=0;i<this.tablero.size();i++) {
-			if(this.tablero.get(i).equals("-"))
+
+		for (int i = 0; i < this.tablero.size(); i++) {
+			if (this.tablero.get(i).equals("-"))
 				isDraw = false;
 		}
 		return isDraw;
@@ -197,15 +185,41 @@ public class TresEnRayaMatch extends Match {
 
 	@Override
 	protected void comprobarTurno(User usuario) throws Exception {
-		if (this.jugadorConElTurno!=usuario)
+		if (this.jugadorConElTurno != usuario)
 			throw new Exception("No tienes el turno");
 	}
 
 	@Override
 	protected void comprobarLegalidad(JSONObject jsoMovimiento, User usuario) throws Exception {
-		int posicion = jsoMovimiento.getInt("posicion");
+		int posicion = jsoMovimiento.getInt("ficha");
 		if (!this.tablero.get(posicion).equals("-"))
 			throw new Exception("Casilla ocupada");
+	}
+
+	@Override
+	protected void notificarAClientes() throws IOException {
+		for (User player : this.players) {
+			player.send(jsoMovimiento);
+		}
+
+	}
+
+	@Override
+	protected void actualizarTablero(JSONObject jsoMovimiento, User usuario) {
+
+		this.tablero.set(jsoMovimiento.getInt("ficha"), getFicha());
+		JSONObject jso = new JSONObject();
+		jso.put("type", "actualizacionTablero");
+		jso.put("tablero", getTablero());
+		jso.put("jugadorConElTurno", cambiarTurno().getUserName());
+		jso.put("ganador", "");
+		jso.put("empate", "F");
+		for (User player : this.players)
+			if (IsWinner(player)) {
+				jso.put("ganador", player.getUserName());
+			} else if (isDraw())
+				jso.put("empate", "T");
+
 	}
 
 }

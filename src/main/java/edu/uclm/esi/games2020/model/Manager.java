@@ -110,17 +110,7 @@ public class Manager {
 		return this.connectedUsersByHttpSession.get(httpSessionId);
 	}
 
-	public void mover(String idMatch, User user, String posicion, JSONObject pongo, JSONObject juntoA) throws Exception {
-		if (juntoA.equals("")) {
-			Match match = this.inPlayMatches.get(idMatch);
-			match.mover(user, posicion,null,null);
-		} else {
-			Match match = this.inPlayMatches.get(idMatch);
-			match.mover(user,"",pongo, juntoA);
-		}
-	}
-
-	public void mover(JSONObject jsoMovimiento, User usuario) {
+	public void mover(JSONObject jsoMovimiento, User usuario) throws Exception {
 		Match match = this.inPlayMatches.get(jsoMovimiento.getString("idMatch"));
 		match.mover(jsoMovimiento, usuario);
 	}

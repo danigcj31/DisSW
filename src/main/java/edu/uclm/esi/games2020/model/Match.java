@@ -63,25 +63,6 @@ public abstract class Match {
 		}
 	}
 
-	protected void actualizarTableros() throws IOException {
-		JSONObject jso = new JSONObject();
-		jso.put("type", "actualizacionTablero");
-		jso.put("tablero", this.getTablero());
-		jso.put("jugadorConElTurno", cambiarTurno().getUserName());
-		jso.put("ganador", "");
-		jso.put("empate", "F");
-//		for (User player : this.players)
-//			if (IsWinner(player)) {
-//				jso.put("ganador", player.getUserName());
-//			} else if(isDraw())
-//				jso.put("empate", "T");
-		
-
-		for (User player : this.players) {
-			player.send(jso);
-		}
-
-	}
 
 	protected abstract boolean isDraw();
 
@@ -107,14 +88,16 @@ public abstract class Match {
 		return this.readyPlayers == game.requiredPlayers;
 	}
 
-	protected abstract void mover(User user, String movimiento,JSONObject pongo, JSONObject juntoA) throws Exception;
-
 	protected void mover(JSONObject jsoMovimiento, User usuario) throws Exception {
-		comprobarTurno(usuario);
+		//comprobarTurno(usuario);
 		comprobarLegalidad(jsoMovimiento, usuario);
-		actualizarTablero(jsoMovimiento, usuario);
-		notificarAClientes(jsoMovimiento);
+	    actualizarTablero(jsoMovimiento, usuario);
+		notificarAClientes();
 	}
+
+	protected abstract void notificarAClientes() throws IOException;
+
+	protected abstract void actualizarTablero(JSONObject jsoMovimiento, User usuario);
 
 	protected abstract void comprobarLegalidad(JSONObject jsoMovimiento, User usuario) throws Exception;
 
