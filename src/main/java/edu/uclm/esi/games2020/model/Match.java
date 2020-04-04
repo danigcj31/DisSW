@@ -90,7 +90,7 @@ public abstract class Match {
 
 	protected void mover(JSONObject jsoMovimiento, User usuario) throws Exception {
 		//comprobarTurno(usuario);
-		if (jsoMovimiento.getJSONObject("taco") == null) {
+		if (!jsoMovimiento.getBoolean("robar")) { 
 			comprobarLegalidad(jsoMovimiento, usuario);
 		    actualizarTablero(jsoMovimiento, usuario);
 			notificarAClientes();

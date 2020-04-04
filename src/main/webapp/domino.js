@@ -130,7 +130,8 @@ function ViewModel() {
 		var p = {
 				idMatch : sessionStorage.idMatch,
 				type : "movimiento",
-				taco : self.tacoFichas()
+				taco : self.tacoFichas(),
+				robar : true
 			};
 			self.sws.send(JSON.stringify(p));
 	}
@@ -156,7 +157,8 @@ class Ficha {
 						type : "movimiento",
 						pongo : this,
 						juntoA : this,
-						taco : null
+						taco : null,
+						robar : false
 					};
 					self.sws.send(JSON.stringify(p));
 							
@@ -166,7 +168,8 @@ class Ficha {
 					type : "movimiento",
 					pongo : self.fichaSeleccionada(),
 					juntoA : this,
-					taco : null
+					taco : null,
+					robar : false
 				};
 				self.sws.send(JSON.stringify(p));
 		} else {
