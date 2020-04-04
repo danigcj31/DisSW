@@ -49,7 +49,7 @@ public class DominoMatch extends Match {
 		JSONObject jso = new JSONObject();
 		JSONArray jsaMesa = new JSONArray();
 		for (FichaDomino ficha : this.fichasMesa)
-			jsaMesa.put(ficha);
+			jsaMesa.put(ficha.toJSON());
 
 		FichaDomino ficha1 = this.tacoFichas.getFichaDomino();
 		FichaDomino ficha2 = this.tacoFichas.getFichaDomino();
@@ -108,6 +108,15 @@ public class DominoMatch extends Match {
 		}
 		return jsa;
 	}
+	
+	protected JSONArray getTacoFichas() {
+		// colocar las fichas en un JSONObject
+		JSONArray jsa = new JSONArray();
+		for (int i = 0; i < this.fichasMesa.size(); i++) {
+			jsa.put(this.fichasMesa.get(i).toJSON());
+		}
+		return jsa;
+	}
 
 	@Override
 	protected User cambiarTurno() {
@@ -139,6 +148,7 @@ public class DominoMatch extends Match {
 		jsoMovimiento.put("jugadorConElTurno", cambiarTurno().getUserName());
 		jsoMovimiento.put("ganador", "");
 		jsoMovimiento.put("empate", "F");
+		jsoMovimiento.put("tacoFicha", getTacoFichas());
 		/*
 		 * for (User player : this.players) if (IsWinner(player)) {
 		 * jsoMovimiento.put("ganador", player.getUserName()); } else if (isDraw())
@@ -150,6 +160,23 @@ public class DominoMatch extends Match {
 
 	}
 
+	@Override
+	protected void comprobarLegalidad(JSONObject jsoMovimiento, User usuario) throws Exception {
+		if ((jsoMovimiento.getJSONObject("juntoA").getBoolean("ocupadoRight"))
+				&& (jsoMovimiento.getJSONObject("juntoA").getBoolean("ocupadoLeft")))
+			throw new Exception("Movimiento inválido");
+	}
+
+	@Override
+	protected void comprobarTurno(User usuario) throws Exception {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	protected void robar(JSONObject jsoMovimiento) {
+		this.fichasMesa.remove(this.fichasMesa.size()-1);
+	}
+	
 	@Override
 	protected void actualizarTablero(JSONObject jsoMovimiento, User usuario) {
 		boolean primeraFicha = false; //PARA SABER SI SÓLO HAY UNA FICHA EN EL TABLERO
@@ -200,22 +227,5 @@ public class DominoMatch extends Match {
 			}
 			primeraFicha = false;
 		}
-
 	}
-
-	@Override
-	protected void comprobarLegalidad(JSONObject jsoMovimiento, User usuario) throws Exception {
-
-		if ((jsoMovimiento.getJSONObject("juntoA").getBoolean("ocupadoRight"))
-				&& (jsoMovimiento.getJSONObject("juntoA").getBoolean("ocupadoLeft")))
-			throw new Exception("Movimiento inválido");
-
-	}
-
-	@Override
-	protected void comprobarTurno(User usuario) throws Exception {
-		// TODO Auto-generated method stub
-
-	}
-
 }

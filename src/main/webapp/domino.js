@@ -7,11 +7,12 @@ function ViewModel() {
 	self.fichasJugador = ko.observableArray([]);
 	self.fichasRival = ko.observableArray([]);
 	self.mesa = ko.observableArray([]);
-	self.taco = ko.observable("");
+	self.tacoFichas = ko.observableArray([]);
 	self.pasarTurno = ko.observable("");
 	self.fichaSeleccionada = ko.observable();
-	self.fichaDeMesa = ko.observable();
-	self.mostrar = ko.observable(false);
+	self.mostrarTablero = ko.observable(false);
+	self.mostrarBtnRobar = ko.observable(false);
+	self.mostrarBtnPasarTurno = ko.observable(false);
 	
 	var idMatch = sessionStorage.idMatch;
 	var started = JSON.parse(sessionStorage.started);
@@ -61,9 +62,16 @@ function ViewModel() {
 				var ficha = fichasJugador[i];
 				self.fichasRival.push(" ");
 			}
-			self.mostrar(true);
-			// self.taco("Robar");
-            // self.pasarTurno("Pasar turno")
+			var fichasTaco = data.startData.mesa;
+			// Rellena el taco
+			for (var i = 0; i < fichasTaco.length; i++) {
+				var ficha = fichasTaco[i];
+				self.tacoFichas.push(new Ficha(ficha.numberLeft, ficha.numberRight));
+			}
+			self.mostrarTablero(true);
+			self.mostrarBtnRobar(true);
+			self.mostrarBtnPasarTurno(true);
+
 		}else if (data.type == "actualizacionTablero"){	// ACTUALIZA EL TABLERO
 			var tablero = data.tablero;
 			self.mesa.removeAll();
@@ -84,7 +92,7 @@ function ViewModel() {
 						}
 					}
 				}
-					// ELIMINAR NUESTRA FICHA
+				// ELIMINAR NUESTRA FICHA
 				var contMisFichas = 0;
 				for (var k=0; k<self.fichasJugador().length; k++) {
 					if ((self.fichasJugador()[k].numberLeft==ficha.numberLeft && self.fichasJugador()[k].numberRight==ficha.numberRight) || (self.fichasJugador()[k].numberRight==ficha.numberLeft && self.fichasJugador()[k].numberLeft==ficha.numberRight) ) {
@@ -98,6 +106,13 @@ function ViewModel() {
 					self.fichasRival.pop();
 				}
 			}
+			
+			self.tacoFichas.removeAll();
+			var tacoFichas = data.tacoFicha;
+			for (var i=0; i<tacoFichas.length; i++) {
+				self.tacoFichas.push(new Ficha(tacoFichas[i].numberLeft, tacoFichas[i].numberRight));
+			}
+			
 			if(!data.ganador == ""){
 				self.mensaje("Ha ganado " + data.ganador);
 			} else if(data.empate == "T")
@@ -105,9 +120,24 @@ function ViewModel() {
 			else
 				self.mensaje(data.jugadorConElTurno + " tiene el turno.");
 		}
-		
 	}
-}
+	
+	self.robar = function() {
+		self.fichasJugador.push(self.tacoFichas.pop());
+		if (self.tacoFichas().length == 0) {
+			self.mostrarBtnRobar(false);
+		}
+		var p = {
+				idMatch : sessionStorage.idMatch,
+				type : "movimiento",
+				taco : self.tacoFichas()
+			};
+			self.sws.send(JSON.stringify(p));
+	}
+	
+	self.pasarTurno = function() {
+		self.mostrarBtnPasarTurno(false);
+	}
 
 
 class Ficha {
@@ -126,8 +156,7 @@ class Ficha {
 						type : "movimiento",
 						pongo : this,
 						juntoA : this,
-						ocupadoLeft : false,
-						ocupadoRight : false
+						taco : null
 					};
 					self.sws.send(JSON.stringify(p));
 							
@@ -137,17 +166,14 @@ class Ficha {
 					type : "movimiento",
 					pongo : self.fichaSeleccionada(),
 					juntoA : this,
-					ocupadoLeft : false,
-					ocupadoRight : false
+					taco : null
 				};
 				self.sws.send(JSON.stringify(p));
-		
-			
 		} else {
 			self.fichaSeleccionada(this);
 		}
-	}
+	}	
 }
-
+}
 var vm = new ViewModel();
 ko.applyBindings(vm);

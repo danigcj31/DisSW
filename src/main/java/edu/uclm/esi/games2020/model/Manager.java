@@ -113,6 +113,7 @@ public class Manager {
 	public void mover(JSONObject jsoMovimiento, User usuario) throws Exception {
 		Match match = this.inPlayMatches.get(jsoMovimiento.getString("idMatch"));
 		match.mover(jsoMovimiento, usuario);
+		
 	}
 
 }
