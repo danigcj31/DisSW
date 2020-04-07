@@ -124,6 +124,8 @@ function ViewModel() {
 		        if (self.tacoFichas().length == 0) {
 		            self.mostrarBtnRobar(false);
 		        }
+		        self.robarFicha(false);
+		        self.mensaje(data.jugadorConElTurno + " tiene el turno.");
 				
 			}else{
 				self.mensaje(data.jugadorConElTurno + " tiene el turno.");
