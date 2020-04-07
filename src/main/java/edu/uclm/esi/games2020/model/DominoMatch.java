@@ -145,10 +145,11 @@ public class DominoMatch extends Match {
 		JSONObject jsoMovimiento = new JSONObject();
 		jsoMovimiento.put("type", "actualizacionTablero");
 		jsoMovimiento.put("tablero", getTablero());
-		jsoMovimiento.put("jugadorConElTurno", cambiarTurno().getUserName());
+		jsoMovimiento.put("jugadorConElTurno", this.jugadorConElTurno.getUserName());
 		jsoMovimiento.put("ganador", "");
 		jsoMovimiento.put("empate", "F");
 		jsoMovimiento.put("tacoFicha", getTacoFichas());
+		
 		/*
 		 * for (User player : this.players) if (IsWinner(player)) {
 		 * jsoMovimiento.put("ganador", player.getUserName()); } else if (isDraw())
@@ -168,9 +169,10 @@ public class DominoMatch extends Match {
 	}
 
 	@Override
-	protected void comprobarTurno(User usuario) throws Exception {
-		// TODO Auto-generated method stub
-	}
+    protected void comprobarTurno(User usuario) throws Exception {
+        if (this.jugadorConElTurno != usuario)
+            throw new Exception("No tienes el turno");
+    }
 
 	@Override
 	protected void robar(JSONObject jsoMovimiento) {

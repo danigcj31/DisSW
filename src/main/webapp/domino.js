@@ -13,6 +13,7 @@ function ViewModel() {
 	self.mostrarTablero = ko.observable(false);
 	self.mostrarBtnRobar = ko.observable(false);
 	self.mostrarBtnPasarTurno = ko.observable(false);
+	self.robar = ko.observable(false);
 	
 	var idMatch = sessionStorage.idMatch;
 	var started = JSON.parse(sessionStorage.started);
@@ -113,70 +114,89 @@ function ViewModel() {
 				self.tacoFichas.push(new Ficha(tacoFichas[i].numberLeft, tacoFichas[i].numberRight));
 			}
 			
+			
 			if(!data.ganador == ""){
 				self.mensaje("Ha ganado " + data.ganador);
-			} else if(data.empate == "T")
+			} else if(data.empate == "T"){
 				self.mensaje("EMPATE");
-			else
+			}else if(self.robar() == true){
+				self.fichasJugador.push(self.tacoFichas.pop());
+		        if (self.tacoFichas().length == 0) {
+		            self.mostrarBtnRobar(false);
+		        }
+				
+			}else{
 				self.mensaje(data.jugadorConElTurno + " tiene el turno.");
+			}
 		}
+		
 	}
 	
-	self.robar = function() {
-		self.fichasJugador.push(self.tacoFichas.pop());
-		if (self.tacoFichas().length == 0) {
-			self.mostrarBtnRobar(false);
-		}
-		var p = {
-				idMatch : sessionStorage.idMatch,
-				type : "movimiento",
-				taco : self.tacoFichas(),
-				robar : true
-			};
-			self.sws.send(JSON.stringify(p));
-	}
-	
-	self.pasarTurno = function() {
-		self.mostrarBtnPasarTurno(false);
-	}
+	 self.robar = function() {
+		 var p = {
+	                idMatch : sessionStorage.idMatch,
+	                type : "movimiento",
+	                taco : self.tacoFichas(),
+	                robar : true,
+	                pasarTurno: false
+	            };
+	            self.sws.send(JSON.stringify(p));
+	        self.robar(true);
+	        
+	    }
+	    
+	    self.pasarTurno = function() {
+	        
+	        var p = {
+	                idMatch : sessionStorage.idMatch,
+	                type : "movimiento",
+	                robar : false,
+	                pasarTurno: true
+	            };
+	            self.sws.send(JSON.stringify(p));
+	    }
+
+	 
 
 
-class Ficha {
-	constructor(numberLeft, numberRight){
-		this.numberLeft = numberLeft;
-		this.numberRight = numberRight;
-		this.enMesa = false;
-		this.ocupadoLeft = false;
-		this.ocupadoRight = false;
+	class Ficha {
+	    constructor(numberLeft, numberRight){
+	        this.numberLeft = numberLeft;
+	        this.numberRight = numberRight;
+	        this.enMesa = false;
+	        this.ocupadoLeft = false;
+	        this.ocupadoRight = false;
+	    }
+	    
+	    seleccionarFicha() {
+	        if (self.mesa().length==0) {
+	                var p = {
+	                        idMatch : sessionStorage.idMatch,
+	                        type : "movimiento",
+	                        pongo : this,
+	                        juntoA : this,
+	                        taco : null,
+	                        robar : false,
+	                        pasarTurno: false
+	                    };
+	                    self.sws.send(JSON.stringify(p));
+	                            
+	        } else if (this.enMesa) {
+	            var p = {
+	                    idMatch : sessionStorage.idMatch,
+	                    type : "movimiento",
+	                    pongo : self.fichaSeleccionada(),
+	                    juntoA : this,
+	                    taco : null,
+	                    robar : false,
+	                    pasarTurno: false
+	                };
+	                self.sws.send(JSON.stringify(p));
+	        } else {
+	            self.fichaSeleccionada(this);
+	        }
+	    }    
 	}
-	
-	seleccionarFicha() {
-		if (self.mesa().length==0) {
-				var p = {
-						idMatch : sessionStorage.idMatch,
-						type : "movimiento",
-						pongo : this,
-						juntoA : this,
-						taco : null,
-						robar : false
-					};
-					self.sws.send(JSON.stringify(p));
-							
-		} else if (this.enMesa) {
-			var p = {
-					idMatch : sessionStorage.idMatch,
-					type : "movimiento",
-					pongo : self.fichaSeleccionada(),
-					juntoA : this,
-					taco : null,
-					robar : false
-				};
-				self.sws.send(JSON.stringify(p));
-		} else {
-			self.fichaSeleccionada(this);
-		}
-	}	
-}
-}
-var vm = new ViewModel();
-ko.applyBindings(vm);
+	}
+	var vm = new ViewModel();
+	ko.applyBindings(vm);

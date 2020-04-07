@@ -89,17 +89,21 @@ public abstract class Match {
 	}
 
 	protected void mover(JSONObject jsoMovimiento, User usuario) throws Exception {
-		//comprobarTurno(usuario);
-		if (!jsoMovimiento.getBoolean("robar")) { 
-			comprobarLegalidad(jsoMovimiento, usuario);
-		    actualizarTablero(jsoMovimiento, usuario);
-			notificarAClientes();
-		} else {
-			robar(jsoMovimiento);
-			notificarAClientes();
-		}
-
-	}
+        comprobarTurno(usuario);
+        if (!jsoMovimiento.getBoolean("robar") && !jsoMovimiento.getBoolean("pasarTurno")) {
+            comprobarLegalidad(jsoMovimiento, usuario);
+            actualizarTablero(jsoMovimiento, usuario);
+            cambiarTurno();
+            notificarAClientes();
+        } else if(jsoMovimiento.getBoolean("robar")){
+            robar(jsoMovimiento);
+            notificarAClientes();
+        }
+        else if(jsoMovimiento.getBoolean("pasarTurno")) {
+            cambiarTurno();
+            notificarAClientes();
+        }
+    }
 
 	protected abstract void robar(JSONObject jsoMovimiento);
 
