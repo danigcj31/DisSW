@@ -13,7 +13,7 @@ function ViewModel() {
 	self.mostrarTablero = ko.observable(false);
 	self.mostrarBtnRobar = ko.observable(false);
 	self.mostrarBtnPasarTurno = ko.observable(false);
-	self.robar = ko.observable(false);
+	self.robarFicha = ko.observable(false);
 	
 	var idMatch = sessionStorage.idMatch;
 	var started = JSON.parse(sessionStorage.started);
@@ -119,7 +119,7 @@ function ViewModel() {
 				self.mensaje("Ha ganado " + data.ganador);
 			} else if(data.empate == "T"){
 				self.mensaje("EMPATE");
-			}else if(self.robar() == true){
+			}else if(self.robarFicha() == true){
 				self.fichasJugador.push(self.tacoFichas.pop());
 		        if (self.tacoFichas().length == 0) {
 		            self.mostrarBtnRobar(false);
@@ -141,7 +141,7 @@ function ViewModel() {
 	                pasarTurno: false
 	            };
 	            self.sws.send(JSON.stringify(p));
-	        self.robar(true);
+	        self.robarFicha(true);
 	        
 	    }
 	    
