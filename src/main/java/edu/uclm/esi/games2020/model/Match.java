@@ -64,11 +64,11 @@ public abstract class Match {
 	}
 
 
-	protected abstract boolean isDraw();
+	protected abstract boolean isDraw(JSONObject jsoMovimiento);
 
 	protected abstract User cambiarTurno();
 
-	protected abstract boolean IsWinner(User player);
+	protected abstract boolean IsWinner(User player,JSONObject jsoMovimiento);
 
 	protected abstract JSONArray getTablero();
 
@@ -94,20 +94,20 @@ public abstract class Match {
             comprobarLegalidad(jsoMovimiento, usuario);
             actualizarTablero(jsoMovimiento, usuario);
             cambiarTurno();
-            notificarAClientes();
+            notificarAClientes(jsoMovimiento);
         } else if(jsoMovimiento.getBoolean("robar")){
             robar(jsoMovimiento);
-            notificarAClientes();
+            notificarAClientes(jsoMovimiento);
         }
         else if(jsoMovimiento.getBoolean("pasarTurno")) {
             cambiarTurno();
-            notificarAClientes();
+            notificarAClientes(jsoMovimiento);
         }
     }
 
 	protected abstract void robar(JSONObject jsoMovimiento);
 
-	protected abstract void notificarAClientes() throws IOException;
+	protected abstract void notificarAClientes(JSONObject jsoMovimiento) throws IOException;
 
 	protected abstract void actualizarTablero(JSONObject jsoMovimiento, User usuario);
 

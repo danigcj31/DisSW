@@ -222,4 +222,10 @@ public class TresEnRayaMatch extends Match {
 
 	}
 
+	@Override
+	protected void robar(JSONObject jsoMovimiento) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

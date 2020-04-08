@@ -121,15 +121,18 @@ function ViewModel() {
 				self.mensaje("EMPATE");
 			}else if(self.robarFicha() == true){
 				self.fichasJugador.push(self.tacoFichas.pop());
-		        if (self.tacoFichas().length == 0) {
-		            self.mostrarBtnRobar(false);
-		        }
+		        
 		        self.robarFicha(false);
 		        self.mensaje(data.jugadorConElTurno + " tiene el turno.");
 				
 			}else{
+				
 				self.mensaje(data.jugadorConElTurno + " tiene el turno.");
 			}
+			
+			if (self.tacoFichas().length == 0) {
+	            self.mostrarBtnRobar(false);
+	        }
 		}
 		
 	}
@@ -179,7 +182,8 @@ function ViewModel() {
 	                        juntoA : this,
 	                        taco : null,
 	                        robar : false,
-	                        pasarTurno: false
+	                        pasarTurno: false,
+	                        nFichasJugador: self.fichasJugador().length
 	                    };
 	                    self.sws.send(JSON.stringify(p));
 	                            
@@ -191,7 +195,8 @@ function ViewModel() {
 	                    juntoA : this,
 	                    taco : null,
 	                    robar : false,
-	                    pasarTurno: false
+	                    pasarTurno: false,
+	                    nFichasJugador: self.fichasJugador().length
 	                };
 	                self.sws.send(JSON.stringify(p));
 	        } else {
