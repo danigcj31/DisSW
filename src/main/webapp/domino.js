@@ -14,6 +14,7 @@ function ViewModel() {
 	self.mostrarBtnRobar = ko.observable(false);
 	self.mostrarBtnPasarTurno = ko.observable(false);
 	self.robarFicha = ko.observable(false);
+	self.bloquear = ko.observable(true);
 	
 	var idMatch = sessionStorage.idMatch;
 	var started = JSON.parse(sessionStorage.started);
@@ -43,7 +44,7 @@ function ViewModel() {
 		if (data.type == "matchStarted") {
 			self.mensaje("La partida ha empezado");
 			self.mensaje(data.jugadorConElTurno + " tiene el turno. ");
-			
+			self.bloquear(data.jugadorConElTurno == sessionStorage.userName ? false : true);
 			var players = data.players;
 			
 			// Mete a los usuarios en la partida
@@ -129,7 +130,7 @@ function ViewModel() {
 				
 				self.mensaje(data.jugadorConElTurno + " tiene el turno.");
 			}
-			
+			self.bloquear(data.jugadorConElTurno == sessionStorage.userName ? false : true);
 			if (self.tacoFichas().length == 0) {
 	            self.mostrarBtnRobar(false);
 	        }

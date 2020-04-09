@@ -91,6 +91,7 @@ function login() {
 		type : "post",
 		contentType: 'application/json',
 		success : function() {
+			sessionStorage.userName = $("#loginUserName").val(),
 			window.location.href="games.html";
 		},
 		error : function(response) {

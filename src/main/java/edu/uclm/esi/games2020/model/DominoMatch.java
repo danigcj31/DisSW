@@ -32,7 +32,7 @@ public class DominoMatch extends Match {
 
 	@Override
 	protected void setState(User user) {
-		IState state = new TerState();
+		IState state = new DominoState();
 		user.setState(state);
 		state.setUser(user);
 	}
@@ -59,13 +59,16 @@ public class DominoMatch extends Match {
 		FichaDomino ficha6 = this.tacoFichas.getFichaDomino();
 		FichaDomino ficha7 = this.tacoFichas.getFichaDomino();
 
-		ficha1.setState(player.getState());
-		ficha2.setState(player.getState());
-		ficha3.setState(player.getState());
-		ficha4.setState(player.getState());
-		ficha5.setState(player.getState());
-		ficha6.setState(player.getState());
-		ficha7.setState(player.getState());
+		DominoState state = (DominoState) player.getState();
+		ficha1.setState(state);
+		ficha2.setState(state);
+		ficha3.setState(state);
+		ficha4.setState(state);
+		ficha5.setState(state);
+		ficha6.setState(state);
+		ficha7.setState(state);
+		
+		state.addFichas(ficha1, ficha2, ficha3, ficha4, ficha5, ficha6, ficha7);
 
 		JSONArray jsaFichasDelJugador = new JSONArray();
 		jsaFichasDelJugador.put(ficha1.toJSON());
