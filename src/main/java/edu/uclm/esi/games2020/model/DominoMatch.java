@@ -23,7 +23,6 @@ public class DominoMatch extends Match {
 		this.tableroDomino = new ArrayList<>();
 		for (int i = 0; i < 14; i++)
 			this.fichasMesa.add(this.tacoFichas.getFichaDomino());
-
 	}
 
 	public int getCurrentPlayer() {
@@ -134,17 +133,37 @@ public class DominoMatch extends Match {
 	@Override
 	protected boolean IsWinner(User player, JSONObject jsoMovimiento) {
 		boolean isWinner = false;
+		DominoState state0 = (DominoState) players.get(0).getState();
+		DominoState state1 = (DominoState) players.get(1).getState();
+		DominoState stateplayers = (DominoState) player.getState();
 		if (this.jugadorConElTurno != player)
 			if (jsoMovimiento.getInt("nFichasJugador") - 1 == 0)
 				isWinner = true;
-
+			else if (jsoMovimiento.getInt("nFichasJugador") > 0) { //DESEMPATE
+				if (jsoMovimiento.getJSONArray("tacoFichas").length() == 0) {
+					if (state0.getPasarTurnoEmpate() && state1.getPasarTurnoEmpate()) {
+						if (state0.getNumFichas() > state1.getNumFichas()) {
+							if (state1 == stateplayers) {
+								isWinner = true;
+							}
+						}
+						else if (state0.getNumFichas() < state1.getNumFichas()) {
+							if (state0 == stateplayers) {
+								isWinner = true;
+							}
+						}
+						else {
+							isWinner = true;
+							// En caso de empate a numero de fichas, el ganador es el segundo
+						}
+					}
+				}				
+			}
 		return isWinner;
 	}
 
 	@Override
 	protected boolean isDraw(JSONObject jsoMovimiento) {
-		
-		
 		return false;
 	}
 
@@ -184,68 +203,43 @@ public class DominoMatch extends Match {
 			throw new Exception("No tienes el turno");
 	}
 
-	@Override
-	protected void robar(JSONObject jsoMovimiento) {
+	protected void robar(JSONObject jsoMovimiento, User usuario) {
+		DominoState stateplayers = (DominoState) usuario.getState(); 
+		stateplayers.addFichas(this.fichasMesa.get(this.fichasMesa.size() - 1));
 		this.fichasMesa.remove(this.fichasMesa.size() - 1);
 	}
 
 	@Override
 	protected void actualizarTablero(JSONObject jsoMovimiento, User usuario) {
 		boolean primeraFicha = false; // PARA SABER SI SÓLO HAY UNA FICHA EN EL TABLERO
-		if (!jsoMovimiento.getJSONObject("juntoA").getBoolean("ocupadoRight")
-				&& !jsoMovimiento.getJSONObject("juntoA").getBoolean("ocupadoLeft"))
+		DominoState stateplayers = (DominoState) usuario.getState(); 
+		if (!jsoMovimiento.getJSONObject("juntoA").getBoolean("ocupadoRight") && !jsoMovimiento.getJSONObject("juntoA").getBoolean("ocupadoLeft"))
 			primeraFicha = true;
-
-		// Primera ficha
-		if (jsoMovimiento.getJSONObject("pongo").getInt("numberLeft") == jsoMovimiento.getJSONObject("juntoA")
-				.getInt("numberLeft")
-				&& jsoMovimiento.getJSONObject("pongo").getInt("numberRight") == jsoMovimiento.getJSONObject("juntoA")
-						.getInt("numberRight")) {
-			this.tableroDomino.add(new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberLeft"),
-					jsoMovimiento.getJSONObject("pongo").getInt("numberRight")));
-
+			// Primera ficha
+		if (jsoMovimiento.getJSONObject("pongo").getInt("numberLeft") == jsoMovimiento.getJSONObject("juntoA").getInt("numberLeft") && jsoMovimiento.getJSONObject("pongo").getInt("numberRight") == jsoMovimiento.getJSONObject("juntoA").getInt("numberRight")) {
+			this.tableroDomino.add(new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberLeft"),jsoMovimiento.getJSONObject("pongo").getInt("numberRight")));
+			stateplayers.removeFichas(new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberLeft"),jsoMovimiento.getJSONObject("pongo").getInt("numberRight")));
 		} else if (jsoMovimiento.getJSONObject("juntoA").getBoolean("ocupadoRight") || primeraFicha == true) { // PARA
-																												// PONER
-																												// FICHA
-																												// AL
-																												// PRINCIPIO
 			// DERECHA-IZQUIERDA
-			if (jsoMovimiento.getJSONObject("pongo").getInt("numberRight") == jsoMovimiento.getJSONObject("juntoA") // PONER
-																													// NORMAL
-					.getInt("numberLeft")) {
-				this.tableroDomino.add(0, new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberLeft"),
-						jsoMovimiento.getJSONObject("pongo").getInt("numberRight")));
-
-				// IZQUIERDA-IZQUIERDA (vuelta)
-			} else if (jsoMovimiento.getJSONObject("pongo").getInt("numberLeft") == jsoMovimiento // PONER GIRAO
-					.getJSONObject("juntoA").getInt("numberLeft")) {
-				this.tableroDomino.add(0, new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberRight"),
-						jsoMovimiento.getJSONObject("pongo").getInt("numberLeft")));
-
+			if (jsoMovimiento.getJSONObject("pongo").getInt("numberRight") == jsoMovimiento.getJSONObject("juntoA").getInt("numberLeft")) {
+				this.tableroDomino.add(0, new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberLeft"),jsoMovimiento.getJSONObject("pongo").getInt("numberRight")));
+				stateplayers.removeFichas(new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberLeft"),jsoMovimiento.getJSONObject("pongo").getInt("numberRight")));
+			// IZQUIERDA-IZQUIERDA (vuelta)
+			} else if (jsoMovimiento.getJSONObject("pongo").getInt("numberLeft") == jsoMovimiento.getJSONObject("juntoA").getInt("numberLeft")) {
+				this.tableroDomino.add(0, new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberRight"),jsoMovimiento.getJSONObject("pongo").getInt("numberLeft")));
+				stateplayers.removeFichas(new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberRight"),jsoMovimiento.getJSONObject("pongo").getInt("numberLeft")));
 			}
 			primeraFicha = false;
-
-		} else if (jsoMovimiento.getJSONObject("juntoA").getBoolean("ocupadoLeft") || primeraFicha == true) { // PARA
-																												// PONER
-																												// FICHA
-																												// AL
-																												// FINAL
-
+		} else if (jsoMovimiento.getJSONObject("juntoA").getBoolean("ocupadoLeft") || primeraFicha == true) { 
 			// IZQUIERDA-DERECHA
-			if (jsoMovimiento.getJSONObject("pongo").getInt("numberLeft") == jsoMovimiento.getJSONObject("juntoA") // PONER
-																													// NORMAL
-					.getInt("numberRight")) {
-				this.tableroDomino.add(new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberLeft"),
-						jsoMovimiento.getJSONObject("pongo").getInt("numberRight")));
-
+			if (jsoMovimiento.getJSONObject("pongo").getInt("numberLeft") == jsoMovimiento.getJSONObject("juntoA").getInt("numberRight")) {
+				this.tableroDomino.add(new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberLeft"),jsoMovimiento.getJSONObject("pongo").getInt("numberRight")));
+				stateplayers.removeFichas(new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberLeft"),jsoMovimiento.getJSONObject("pongo").getInt("numberRight")));
 			}
 			// DERECHA-DERECHA (vuelta)
-			else if (jsoMovimiento.getJSONObject("pongo").getInt("numberRight") == jsoMovimiento.getJSONObject("juntoA") // PONER
-																															// GIRAO
-					.getInt("numberRight")) {
-				this.tableroDomino.add(new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberRight"),
-						jsoMovimiento.getJSONObject("pongo").getInt("numberLeft")));
-
+			else if (jsoMovimiento.getJSONObject("pongo").getInt("numberRight") == jsoMovimiento.getJSONObject("juntoA").getInt("numberRight")) {
+				this.tableroDomino.add(new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberRight"),jsoMovimiento.getJSONObject("pongo").getInt("numberLeft")));
+				stateplayers.removeFichas(new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberLeft"),jsoMovimiento.getJSONObject("pongo").getInt("numberRight")));
 			}
 			primeraFicha = false;
 		}

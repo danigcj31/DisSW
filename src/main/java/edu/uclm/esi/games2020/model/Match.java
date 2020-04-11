@@ -96,7 +96,7 @@ public abstract class Match {
             cambiarTurno();
             notificarAClientes(jsoMovimiento);
         } else if(jsoMovimiento.getBoolean("robar")){
-            robar(jsoMovimiento);
+            robar(jsoMovimiento,usuario);
             notificarAClientes(jsoMovimiento);
         }
         else if(jsoMovimiento.getBoolean("pasarTurno")) {
@@ -105,7 +105,7 @@ public abstract class Match {
         }
     }
 
-	protected abstract void robar(JSONObject jsoMovimiento);
+	protected abstract void robar(JSONObject jsoMovimiento, User usuario);
 
 	protected abstract void notificarAClientes(JSONObject jsoMovimiento) throws IOException;
 

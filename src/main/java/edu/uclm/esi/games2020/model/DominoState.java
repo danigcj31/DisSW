@@ -7,6 +7,7 @@ public class DominoState implements IState {
 
 	private User user;
 	private List<FichaDomino> fichas;
+	private boolean pasarTurnoEmpate;
 
 	@Override
 	public void setUser(User user) {
@@ -18,5 +19,21 @@ public class DominoState implements IState {
 		for (int i=0; i<fichas.length; i++)
 			this.fichas.add(fichas[i]);
 	}
+	
+	public void removeFichas(FichaDomino ficha) {
+		this.fichas.remove(ficha);
+	}
+	
+	public boolean getPasarTurnoEmpate() {
+		return pasarTurnoEmpate;
+	}
 
+	public void setPasarTurnoEmpate(boolean pasarTurnoEmpate) {
+		this.pasarTurnoEmpate = pasarTurnoEmpate;
+	}	
+	
+	public int getNumFichas() {
+		return this.fichas.size();
+	}
+	
 }

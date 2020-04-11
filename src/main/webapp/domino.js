@@ -156,6 +156,7 @@ function ViewModel() {
 	        var p = {
 	                idMatch : sessionStorage.idMatch,
 	                type : "movimiento",
+	                taco : self.tacoFichas(),
 	                robar : false,
 	                pasarTurno: true
 	            };
