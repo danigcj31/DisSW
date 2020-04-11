@@ -36,4 +36,8 @@ public class DominoState implements IState {
 		return this.fichas.size();
 	}
 	
+	public FichaDomino getUltFicha() {
+		return this.fichas.get(this.fichas.size()-1);
+	}
+	
 }

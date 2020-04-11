@@ -76,6 +76,7 @@ function ViewModel() {
 
 		}else if (data.type == "actualizacionTablero"){	// ACTUALIZA EL TABLERO
 			var tablero = data.tablero;
+			var tacoFichas = data.tacoFicha;
 			self.mesa.removeAll();
 			for (var i = 0; i < tablero.length; i++) {
 				var ficha = new Ficha(tablero[i].numberLeft, tablero[i].numberRight);
@@ -109,19 +110,23 @@ function ViewModel() {
 				}
 			}
 			
-			self.tacoFichas.removeAll();
-			var tacoFichas = data.tacoFicha;
-			for (var i=0; i<tacoFichas.length; i++) {
-				self.tacoFichas.push(new Ficha(tacoFichas[i].numberLeft, tacoFichas[i].numberRight));
-			}
+			
 			
 			
 			if(!data.ganador == ""){
 				self.mensaje("Ha ganado " + data.ganador);
 			} else if(data.empate == "T"){
 				self.mensaje("EMPATE");
-			}else if(self.robarFicha() == true){
-				self.fichasJugador.push(self.tacoFichas.pop());
+			}else if((self.robarFicha() == true) || (self.tacoFichas().length != tacoFichas.length)){ ///MODIFICAR TACO CUANDO SE ROBA
+				self.tacoFichas.removeAll();
+				var fichaRobada = data.fichaRobada;
+				for (var i=0; i<tacoFichas.length; i++) {
+					self.tacoFichas.push(new Ficha(tacoFichas[i].numberLeft, tacoFichas[i].numberRight));
+				}
+				if(self.robarFicha() == true){
+					self.fichasJugador.push(new Ficha(fichaRobada.numberLeft, fichaRobada.numberRight));
+				}
+				
 		        
 		        self.robarFicha(false);
 		        self.mensaje(data.jugadorConElTurno + " tiene el turno.");
@@ -144,7 +149,8 @@ function ViewModel() {
 	                type : "movimiento",
 	                taco : self.tacoFichas(),
 	                robar : true,
-	                pasarTurno: false
+	                pasarTurno: false,
+	                nFichasJugador: self.fichasJugador().length
 	            };
 	            self.sws.send(JSON.stringify(p));
 	        self.robarFicha(true);
@@ -158,7 +164,8 @@ function ViewModel() {
 	                type : "movimiento",
 	                taco : self.tacoFichas(),
 	                robar : false,
-	                pasarTurno: true
+	                pasarTurno: true,
+	                nFichasJugador: self.fichasJugador().length
 	            };
 	            self.sws.send(JSON.stringify(p));
 	    }
@@ -182,7 +189,7 @@ function ViewModel() {
 	                        type : "movimiento",
 	                        pongo : this,
 	                        juntoA : this,
-	                        taco : null,
+	                        taco : self.tacoFichas(),
 	                        robar : false,
 	                        pasarTurno: false,
 	                        nFichasJugador: self.fichasJugador().length
@@ -195,7 +202,7 @@ function ViewModel() {
 	                    type : "movimiento",
 	                    pongo : self.fichaSeleccionada(),
 	                    juntoA : this,
-	                    taco : null,
+	                    taco : self.tacoFichas(),
 	                    robar : false,
 	                    pasarTurno: false,
 	                    nFichasJugador: self.fichasJugador().length
