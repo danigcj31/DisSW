@@ -20,24 +20,23 @@ public class FichaDomino {
 		return jso;
 	}
 
-	public void setState(IState state) {
-		this.state = state;
-	}
-
 	public int getNumberL() {
 		return numberL;
-	}
-
-	public void setNumberL(int numberL) {
-		this.numberL = numberL;
 	}
 
 	public int getNumberR() {
 		return numberR;
 	}
 
+	public void setNumberL(int numberL) {
+		this.numberL = numberL;
+	}
+
 	public void setNumberR(int numberR) {
 		this.numberR = numberR;
 	}
 
+	public void setState(IState state) {
+		this.state = state;
+	}
 }

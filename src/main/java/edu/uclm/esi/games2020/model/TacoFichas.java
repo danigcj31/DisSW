@@ -40,8 +40,10 @@ public class TacoFichas {
 		this.fichasDomino.add(new FichaDomino(6,6));
 	}
 
+	public FichaDomino getFichaDomino() {
+		return this.fichasDomino.remove(0);
+	}
 	
-
 	public void suffle() {
 		SecureRandom dado = new SecureRandom();
 		for (int i = 0; i < 200; i++) {
@@ -51,9 +53,5 @@ public class TacoFichas {
 			this.fichasDomino.set(a, this.fichasDomino.get(b));
 			this.fichasDomino.set(b, auxiliar);
 		}
-	}
-
-	public FichaDomino getFichaDomino() {
-		return this.fichasDomino.remove(0);
 	}
 }

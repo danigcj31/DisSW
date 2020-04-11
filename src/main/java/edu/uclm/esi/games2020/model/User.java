@@ -11,7 +11,6 @@ import org.json.JSONObject;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-
 @Entity
 public class User {
 	@Id
@@ -22,57 +21,22 @@ public class User {
 	private WebSocketSession session;
 	@Transient
 	private boolean turno;
-	public boolean getTurno() {
-		return turno;
-	}
-
-	public void setTurno(boolean turno) {
-		this.turno = turno;
-	}
-
 	@Transient
 	private IState state;
 	@Transient
 	private HttpSession httpSession;
-	
-	public void setState(IState state) {
-		this.state = state;
-	}
-	
-	public String getUserName() {
-		return userName;
-	}
-	
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-	
-	public String getEmail() {
-		return email;
-	}
-	
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public JSONObject toJSON() {
-		return new JSONObject().put("userName", this.userName);
-	}
-
-	public void setSession(WebSocketSession session) {
-		this.session = session;
-	}
 
 	public void send(JSONObject json) throws IOException {
 		this.session.sendMessage(new TextMessage(json.toString()));		
 	}
 
-	public IState getState() {
-		return this.state;
+	public JSONObject toJSON() {
+		return new JSONObject().put("userName", this.userName);
 	}
-
-	public void setHttpSession(HttpSession httpSession) {
-		this.httpSession = httpSession;
+	
+	//GETTERS
+	public String getEmail() {
+		return email;
 	}
 	
 	public HttpSession getHttpSession() {
@@ -83,7 +47,43 @@ public class User {
 		return this.pwd;
 	}
 
+	public IState getState() {
+		return this.state;
+	}
+	
+	public boolean getTurno() {
+		return turno;
+	}
+	
+	public String getUserName() {
+		return userName;
+	}
+	//SETTERS
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public void setHttpSession(HttpSession httpSession) {
+		this.httpSession = httpSession;
+	}
+
 	public void setPwd(String pwd) {
 		this.pwd = pwd;
+	}
+	
+	public void setSession(WebSocketSession session) {
+		this.session = session;
+	}
+	
+	public void setState(IState state) {
+		this.state = state;
+	}
+
+	public void setTurno(boolean turno) {
+		this.turno = turno;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 }

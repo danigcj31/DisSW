@@ -28,64 +28,12 @@ public abstract class Match {
 		setState(user);
 	}
 
-	protected abstract void setState(User user);
-
 	public List<User> getPlayers() {
 		return players;
 	}
 
 	public String getId() {
 		return id;
-	}
-
-	public abstract void start() throws IOException;
-
-	public JSONObject toJSON() {
-		JSONObject jso = new JSONObject();
-		jso.put("idMatch", this.id);
-		jso.put("started", this.started);
-		JSONArray jsa = new JSONArray();
-		for (User user : this.players)
-			jsa.put(user.toJSON());
-		jso.put("players", jsa);
-		return jso;
-	}
-
-	public void notifyStart() throws IOException {
-
-		JSONObject jso = this.toJSON();
-		jso.put("type", "matchStarted");
-		jso.put("jugadorConElTurno", sortearTurno().getUserName());
-		for (User player : this.players) {
-
-			jso.put("startData", startData(player));
-			player.send(jso);
-		}
-	}
-
-
-	protected abstract boolean isDraw(JSONObject jsoMovimiento);
-
-	protected abstract User cambiarTurno();
-
-	protected abstract boolean IsWinner(User player,JSONObject jsoMovimiento);
-
-	protected abstract JSONArray getTablero();
-
-	protected abstract User sortearTurno();
-
-	protected abstract JSONObject startData(User player);
-
-	public void playerReady(WebSocketSession session) {
-		++readyPlayers;
-	}
-
-	public void setGame(Game game) {
-		this.game = game;
-	}
-
-	public boolean ready() {
-		return this.readyPlayers == game.requiredPlayers;
 	}
 
 	protected void mover(JSONObject jsoMovimiento, User usuario) throws Exception {
@@ -104,16 +52,64 @@ public abstract class Match {
             notificarAClientes(jsoMovimiento);
         }
     }
+	
+	public void notifyStart() throws IOException {
+		JSONObject jso = this.toJSON();
+		jso.put("type", "matchStarted");
+		jso.put("jugadorConElTurno", sortearTurno().getUserName());
+		for (User player : this.players) {
 
-	protected abstract void robar(JSONObject jsoMovimiento, User usuario);
+			jso.put("startData", startData(player));
+			player.send(jso);
+		}
+	}
+	
+	public JSONObject toJSON() {
+		JSONObject jso = new JSONObject();
+		jso.put("idMatch", this.id);
+		jso.put("started", this.started);
+		JSONArray jsa = new JSONArray();
+		for (User user : this.players)
+			jsa.put(user.toJSON());
+		jso.put("players", jsa);
+		return jso;
+	}
 
-	protected abstract void notificarAClientes(JSONObject jsoMovimiento) throws IOException;
+	public void playerReady(WebSocketSession session) {
+		++readyPlayers;
+	}
 
+	public boolean ready() {
+		return this.readyPlayers == game.requiredPlayers;
+	}
+	
+	public void setGame(Game game) {
+		this.game = game;
+	}
+	
 	protected abstract void actualizarTablero(JSONObject jsoMovimiento, User usuario);
+
+	protected abstract User cambiarTurno();
 
 	protected abstract void comprobarLegalidad(JSONObject jsoMovimiento, User usuario) throws Exception;
 
 	protected abstract void comprobarTurno(User usuario) throws Exception;
+
+	protected abstract JSONArray getTablero();
+
+	protected abstract boolean isDraw(JSONObject jsoMovimiento);
 	
+	protected abstract boolean IsWinner(User player,JSONObject jsoMovimiento);
 	
+	protected abstract void notificarAClientes(JSONObject jsoMovimiento) throws IOException;
+
+	protected abstract void robar(JSONObject jsoMovimiento, User usuario);
+
+	protected abstract void setState(User user);
+	
+	protected abstract User sortearTurno();
+
+	public abstract void start() throws IOException;
+	
+	protected abstract JSONObject startData(User player);	
 }

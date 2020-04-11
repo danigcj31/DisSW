@@ -43,6 +43,23 @@ public class Manager {
 
 	}
 
+	public User findUserByHttpSessionId(String httpSessionId) {
+		return this.connectedUsersByHttpSession.get(httpSessionId);
+	}
+	
+	@Bean
+	public static Manager get() {
+		return ManagerHolder.singleton;
+	}
+
+	public JSONArray getGames() {
+		Collection<Game> gamesList = this.games.values();
+		JSONArray result = new JSONArray();
+		for (Game game : gamesList)
+			result.put(game.getName());
+		return result;
+	}
+	
 	public Match joinToMatch(User user, String gameName) {
 		Game game = this.games.get(gameName);
 		Match match = game.joinToMatch(user);
@@ -50,16 +67,7 @@ public class Manager {
 			pendingMatches.put(match.getId(), match);
 		return match;
 	}
-
-	private static class ManagerHolder {
-		static Manager singleton = new Manager();
-	}
-
-	@Bean
-	public static Manager get() {
-		return ManagerHolder.singleton;
-	}
-
+	
 	public User login(HttpSession httpSession, String userName, String pwd) throws Exception {
 		try {
 			User user = userDAO.findById(userName).get();
@@ -74,28 +82,22 @@ public class Manager {
 			throw new Exception("Credenciales inválidas");
 		}
 	}
-
-	public void register(String email, String userName, String pwd) throws Exception {
-		User user = new User();
-		user.setEmail(email);
-		user.setUserName(userName);
-		user.setPwd(pwd);
-		userDAO.save(user);
-	}
-
+	
 	public void logout(User user) {
 		this.connectedUsersByUserName.remove(user.getUserName());
 		this.connectedUsersByHttpSession.remove(user.getHttpSession().getId());
 	}
-
-	public JSONArray getGames() {
-		Collection<Game> gamesList = this.games.values();
-		JSONArray result = new JSONArray();
-		for (Game game : gamesList)
-			result.put(game.getName());
-		return result;
+	
+	private static class ManagerHolder {
+		static Manager singleton = new Manager();
 	}
-
+	
+	public void mover(JSONObject jsoMovimiento, User usuario) throws Exception {
+		Match match = this.inPlayMatches.get(jsoMovimiento.getString("idMatch"));
+		match.mover(jsoMovimiento, usuario);
+		
+	}
+	
 	public void playerReady(String idMatch, WebSocketSession session) throws IOException {
 		Match match = this.pendingMatches.get(idMatch);
 		match.playerReady(session);
@@ -106,14 +108,11 @@ public class Manager {
 		}
 	}
 
-	public User findUserByHttpSessionId(String httpSessionId) {
-		return this.connectedUsersByHttpSession.get(httpSessionId);
+	public void register(String email, String userName, String pwd) throws Exception {
+		User user = new User();
+		user.setEmail(email);
+		user.setUserName(userName);
+		user.setPwd(pwd);
+		userDAO.save(user);
 	}
-
-	public void mover(JSONObject jsoMovimiento, User usuario) throws Exception {
-		Match match = this.inPlayMatches.get(jsoMovimiento.getString("idMatch"));
-		match.mover(jsoMovimiento, usuario);
-		
-	}
-
 }

@@ -26,8 +26,127 @@ public class DominoMatch extends Match {
 			this.fichasMesa.add(this.tacoFichas.getFichaDomino());
 	}
 
+	@Override
+	protected User cambiarTurno() {
+		if (this.jugadorConElTurno.equals(players.get(0)))
+			this.jugadorConElTurno = players.get(1);
+		else
+			this.jugadorConElTurno = players.get(0);
+
+		return this.jugadorConElTurno;
+	}
+	
+	@Override
+	protected void comprobarLegalidad(JSONObject jsoMovimiento, User usuario) throws Exception {
+		if ((jsoMovimiento.getJSONObject("juntoA").getBoolean("ocupadoRight"))
+				&& (jsoMovimiento.getJSONObject("juntoA").getBoolean("ocupadoLeft")))
+			throw new Exception("Movimiento inválido");
+	}
+
+	@Override
+	protected void comprobarTurno(User usuario) throws Exception {
+		if (this.jugadorConElTurno != usuario)
+			throw new Exception("No tienes el turno");
+	}
+	
 	public int getCurrentPlayer() {
 		return 0;
+	}
+
+	private String getFicha() {
+		if (this.jugadorConElTurno == this.players.get(0))
+			return "X";
+		return "O";
+	}
+
+	private JSONObject getFichaRobada() {
+		DominoState stateplayers = (DominoState) this.jugadorConElTurno.getState();
+		return stateplayers.getUltFicha().toJSON();
+	}
+
+	@Override
+	protected JSONArray getTablero() {
+		// colocar las fichas en un JSONObject
+		JSONArray jsa = new JSONArray();
+		for (int i = 0; i < this.tableroDomino.size(); i++) {
+			jsa.put(this.tableroDomino.get(i).toJSON());
+		}
+		return jsa;
+	}
+
+	protected JSONArray getTacoFichas() {
+		// colocar las fichas en un JSONObject
+		JSONArray jsa = new JSONArray();
+		for (int i = 0; i < this.fichasMesa.size(); i++) {
+			jsa.put(this.fichasMesa.get(i).toJSON());
+		}
+		return jsa;
+	}
+
+	@Override
+	protected boolean isDraw(JSONObject jsoMovimiento) {
+		return false;
+	}
+
+	
+	@Override
+	protected boolean IsWinner(User player, JSONObject jsoMovimiento) {
+		boolean isWinner = false;
+		DominoState state0 = (DominoState) players.get(0).getState();
+		DominoState state1 = (DominoState) players.get(1).getState();
+		DominoState stateplayers = (DominoState) player.getState();
+		if (this.jugadorConElTurno != player)
+			if (jsoMovimiento.getInt("nFichasJugador") - 1 == 0)
+				isWinner = true;
+			else if (jsoMovimiento.getInt("nFichasJugador") > 0) { // DESEMPATE
+				if (jsoMovimiento.getJSONArray("taco").length() == 0) {
+					if (jsoMovimiento.getBoolean("pasarTurno"))
+						stateplayers.setPasarTurnoEmpate(true);
+					if (state0.getPasarTurnoEmpate() && state1.getPasarTurnoEmpate()) {
+						if (state0.getNumFichas() > state1.getNumFichas()) {
+							if (state1 == stateplayers) {
+								isWinner = true;
+							}
+						} else if (state0.getNumFichas() < state1.getNumFichas()) {
+							if (state0 == stateplayers) {
+								isWinner = true;
+							}
+						} else {
+							isWinner = true;
+							// En caso de empate a numero de fichas, el ganador es el segundo
+						}
+					}
+				}
+			}
+		return isWinner;
+	}
+	
+	@Override
+	protected void notificarAClientes(JSONObject jsoMovimiento) throws IOException {
+		JSONObject jso = new JSONObject();
+		jso.put("type", "actualizacionTablero");
+		jso.put("tablero", getTablero());
+		jso.put("jugadorConElTurno", this.jugadorConElTurno.getUserName());
+		jso.put("ganador", "");
+		jso.put("empate", "F");
+		jso.put("tacoFicha", getTacoFichas());
+		if (jsoMovimiento.getBoolean("robar"))
+			jso.put("fichaRobada", getFichaRobada());
+
+		for (User player : this.players)
+			if (IsWinner(player, jsoMovimiento))
+				jso.put("ganador", player.getUserName());
+
+		for (User player : this.players) {
+			player.send(jso);
+		}
+
+	}
+	
+	protected void robar(JSONObject jsoMovimiento, User usuario) {
+		DominoState stateplayers = (DominoState) usuario.getState();
+		stateplayers.addFichas(this.fichasMesa.get(this.fichasMesa.size() - 1));
+		this.fichasMesa.remove(this.fichasMesa.size() - 1);
 	}
 
 	@Override
@@ -37,6 +156,17 @@ public class DominoMatch extends Match {
 		state.setUser(user);
 	}
 
+	@Override
+	protected User sortearTurno() {
+		Random dado = new Random();
+		if (dado.nextBoolean()) {
+			this.jugadorConElTurno = players.get(0);
+		} else {
+			this.jugadorConElTurno = players.get(1);
+		}
+		return this.jugadorConElTurno;
+	}
+	
 	@Override
 	public void start() throws IOException {
 		this.started = true;
@@ -83,136 +213,6 @@ public class DominoMatch extends Match {
 		jso.put("mesa", jsaMesa);
 
 		return jso;
-	}
-
-	private String getFicha() {
-		if (this.jugadorConElTurno == this.players.get(0))
-			return "X";
-		return "O";
-	}
-
-	@Override
-	protected User sortearTurno() {
-		Random dado = new Random();
-		if (dado.nextBoolean()) {
-			this.jugadorConElTurno = players.get(0);
-		} else {
-			this.jugadorConElTurno = players.get(1);
-		}
-		return this.jugadorConElTurno;
-	}
-
-	@Override
-	protected JSONArray getTablero() {
-		// colocar las fichas en un JSONObject
-		JSONArray jsa = new JSONArray();
-		for (int i = 0; i < this.tableroDomino.size(); i++) {
-			jsa.put(this.tableroDomino.get(i).toJSON());
-		}
-		return jsa;
-	}
-
-	protected JSONArray getTacoFichas() {
-		// colocar las fichas en un JSONObject
-		JSONArray jsa = new JSONArray();
-		for (int i = 0; i < this.fichasMesa.size(); i++) {
-			jsa.put(this.fichasMesa.get(i).toJSON());
-		}
-		return jsa;
-	}
-
-	@Override
-	protected User cambiarTurno() {
-		if (this.jugadorConElTurno.equals(players.get(0)))
-			this.jugadorConElTurno = players.get(1);
-		else
-			this.jugadorConElTurno = players.get(0);
-
-		return this.jugadorConElTurno;
-	}
-
-	@Override
-	protected boolean IsWinner(User player, JSONObject jsoMovimiento) {
-		boolean isWinner = false;
-		DominoState state0 = (DominoState) players.get(0).getState();
-		DominoState state1 = (DominoState) players.get(1).getState();
-		DominoState stateplayers = (DominoState) player.getState();
-		if (this.jugadorConElTurno != player)
-			if (jsoMovimiento.getInt("nFichasJugador") - 1 == 0)
-				isWinner = true;
-			else if (jsoMovimiento.getInt("nFichasJugador") > 0) { // DESEMPATE
-				if (jsoMovimiento.getJSONArray("taco").length() == 0) {
-					if (jsoMovimiento.getBoolean("pasarTurno"))
-						stateplayers.setPasarTurnoEmpate(true);
-					if (state0.getPasarTurnoEmpate() && state1.getPasarTurnoEmpate()) {
-						if (state0.getNumFichas() > state1.getNumFichas()) {
-							if (state1 == stateplayers) {
-								isWinner = true;
-							}
-						} else if (state0.getNumFichas() < state1.getNumFichas()) {
-							if (state0 == stateplayers) {
-								isWinner = true;
-							}
-						} else {
-							isWinner = true;
-							// En caso de empate a numero de fichas, el ganador es el segundo
-						}
-					}
-				}
-			}
-		return isWinner;
-	}
-
-	@Override
-	protected boolean isDraw(JSONObject jsoMovimiento) {
-		return false;
-	}
-
-	@Override
-	protected void notificarAClientes(JSONObject jsoMovimiento) throws IOException {
-		JSONObject jso = new JSONObject();
-		jso.put("type", "actualizacionTablero");
-		jso.put("tablero", getTablero());
-		jso.put("jugadorConElTurno", this.jugadorConElTurno.getUserName());
-		jso.put("ganador", "");
-		jso.put("empate", "F");
-		jso.put("tacoFicha", getTacoFichas());
-		if (jsoMovimiento.getBoolean("robar"))
-			jso.put("fichaRobada", getFichaRobada());
-
-		for (User player : this.players)
-			if (IsWinner(player, jsoMovimiento))
-				jso.put("ganador", player.getUserName());
-
-		for (User player : this.players) {
-			player.send(jso);
-		}
-
-	}
-
-	private JSONObject getFichaRobada() {
-		DominoState stateplayers = (DominoState) this.jugadorConElTurno.getState();
-
-		return stateplayers.getUltFicha().toJSON();
-	}
-
-	@Override
-	protected void comprobarLegalidad(JSONObject jsoMovimiento, User usuario) throws Exception {
-		if ((jsoMovimiento.getJSONObject("juntoA").getBoolean("ocupadoRight"))
-				&& (jsoMovimiento.getJSONObject("juntoA").getBoolean("ocupadoLeft")))
-			throw new Exception("Movimiento inválido");
-	}
-
-	@Override
-	protected void comprobarTurno(User usuario) throws Exception {
-		if (this.jugadorConElTurno != usuario)
-			throw new Exception("No tienes el turno");
-	}
-
-	protected void robar(JSONObject jsoMovimiento, User usuario) {
-		DominoState stateplayers = (DominoState) usuario.getState();
-		stateplayers.addFichas(this.fichasMesa.get(this.fichasMesa.size() - 1));
-		this.fichasMesa.remove(this.fichasMesa.size() - 1);
 	}
 
 	@Override
@@ -268,5 +268,4 @@ public class DominoMatch extends Match {
 			primeraFicha = false;
 		}
 	}
-
 }
