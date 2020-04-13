@@ -43,8 +43,8 @@
 			<div class="col-sm-12 col-centered">
 				<div id="divLogin" style="display:none">
 					<b>Login</b><br>
-					<input type="text" id="loginUserName" placeholder="user name"><br>
-					<input type="password" id="loginPwd" placeholder="password"><br>
+					<input type="text" id="loginUserName" data-ng-model="userName" placeholder="user name"><br>
+					<input type="password" id="loginPwd" data-ng-model="pwd" placeholder="password"><br>
 					<button onclick="login()" id="btnLogin">Login</button><br>
 					<button onclick="requestToken()" id="btnRecuperarPwd">Recuperar password</button><br>
 					<a href="javascript:logout()" id="logout" style="display:none">Salir</a>

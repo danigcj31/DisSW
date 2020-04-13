@@ -97,7 +97,7 @@ public abstract class Match {
 
 	protected abstract JSONArray getTablero();
 
-	protected abstract boolean isDraw(JSONObject jsoMovimiento);
+	protected abstract boolean isDraw();
 	
 	protected abstract boolean IsWinner(User player,JSONObject jsoMovimiento);
 	

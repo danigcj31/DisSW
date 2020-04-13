@@ -82,7 +82,9 @@ class Ficha {
 		var msg = {
 			type : "movimiento",
 			idMatch : sessionStorage.idMatch,
-			ficha: ""+posicion
+			ficha: ""+posicion,
+			robar: false,
+			pasarTurno: false
 					
 		};
 		

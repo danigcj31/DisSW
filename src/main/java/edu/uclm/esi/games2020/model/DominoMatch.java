@@ -2,7 +2,6 @@ package edu.uclm.esi.games2020.model;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
@@ -53,12 +52,6 @@ public class DominoMatch extends Match {
 		return 0;
 	}
 
-	private String getFicha() {
-		if (this.jugadorConElTurno == this.players.get(0))
-			return "X";
-		return "O";
-	}
-
 	private JSONObject getFichaRobada() {
 		DominoState stateplayers = (DominoState) this.jugadorConElTurno.getState();
 		return stateplayers.getUltFicha().toJSON();
@@ -84,7 +77,7 @@ public class DominoMatch extends Match {
 	}
 
 	@Override
-	protected boolean isDraw(JSONObject jsoMovimiento) {
+	protected boolean isDraw() {
 		return false;
 	}
 

@@ -28,11 +28,17 @@
 	<B>
 	<font size=4>
 	<!-- ko foreach : usuarios -->
-	<span data-bind="html : $data"></span>
-	<br>
+		<span data-bind="html : $data"></span>
+		<!-- ko if: $index()=== 0 -->
+			<label> VS </label>
+		<!-- /ko -->
+	 
 	<!-- /ko -->
 	</font>
 	</B>
+<br>
+<br>
+<br>
 
 	<!-- ko foreach : { data: tableroArray, as : "ficha" } -->
 		<button>

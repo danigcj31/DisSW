@@ -87,7 +87,7 @@ public class TresEnRayaMatch extends Match {
 		return jsa;
 	}
 
-	protected boolean IsWinner(User player) {
+	protected boolean IsWinner(User player, JSONObject jsoMovimiento) {
 		Boolean winner = false;
 
 		if (IsWinnerFilas(player))
@@ -197,9 +197,21 @@ public class TresEnRayaMatch extends Match {
 	}
 
 	@Override
-	protected void notificarAClientes() throws IOException {
+	protected void notificarAClientes(JSONObject jsoMovimiento) throws IOException {
+		JSONObject jso = new JSONObject();
+		jso.put("type", "actualizacionTablero");
+		jso.put("tablero", getTablero());
+		jso.put("jugadorConElTurno", this.jugadorConElTurno.getUserName());
+		jso.put("ganador", "");
+		jso.put("empate", "F");
+		for (User player : this.players)
+			if (IsWinner(player,jsoMovimiento)) {
+				jso.put("ganador", player.getUserName());
+			} else if (isDraw())
+				jso.put("empate", "T");
+		
 		for (User player : this.players) {
-			player.send(jsoMovimiento);
+			player.send(jso);
 		}
 
 	}
@@ -208,23 +220,14 @@ public class TresEnRayaMatch extends Match {
 	protected void actualizarTablero(JSONObject jsoMovimiento, User usuario) {
 
 		this.tablero.set(jsoMovimiento.getInt("ficha"), getFicha());
-		JSONObject jso = new JSONObject();
-		jso.put("type", "actualizacionTablero");
-		jso.put("tablero", getTablero());
-		jso.put("jugadorConElTurno", cambiarTurno().getUserName());
-		jso.put("ganador", "");
-		jso.put("empate", "F");
-		for (User player : this.players)
-			if (IsWinner(player)) {
-				jso.put("ganador", player.getUserName());
-			} else if (isDraw())
-				jso.put("empate", "T");
+		
 
 	}
 
+	
+	
 	@Override
-	protected void robar(JSONObject jsoMovimiento) {
-		// TODO Auto-generated method stub
+	protected void robar(JSONObject jsoMovimiento, User usuario) {
 		
 	}
 
