@@ -209,8 +209,9 @@ public class DominoMatch extends Match {
 	}
 
 	@Override
-	protected void actualizarTablero(JSONObject jsoMovimiento, User usuario) {
+	protected void actualizarTablero(JSONObject jsoMovimiento, User usuario) throws Exception {
 		boolean primeraFicha = false; // PARA SABER SI SÓLO HAY UNA FICHA EN EL TABLERO
+		boolean cambio = false;
 		DominoState stateplayers = (DominoState) usuario.getState();
 		if (!jsoMovimiento.getJSONObject("juntoA").getBoolean("ocupadoRight")
 				&& !jsoMovimiento.getJSONObject("juntoA").getBoolean("ocupadoLeft"))
@@ -224,6 +225,8 @@ public class DominoMatch extends Match {
 					jsoMovimiento.getJSONObject("pongo").getInt("numberRight")));
 			stateplayers.removeFichas(new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberLeft"),
 					jsoMovimiento.getJSONObject("pongo").getInt("numberRight")));
+			cambio = true;
+			primeraFicha = false;
 		} else if (jsoMovimiento.getJSONObject("juntoA").getBoolean("ocupadoRight") || primeraFicha == true) { // PARA
 			// DERECHA-IZQUIERDA
 			if (jsoMovimiento.getJSONObject("pongo").getInt("numberRight") == jsoMovimiento.getJSONObject("juntoA")
@@ -232,6 +235,8 @@ public class DominoMatch extends Match {
 						jsoMovimiento.getJSONObject("pongo").getInt("numberRight")));
 				stateplayers.removeFichas(new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberLeft"),
 						jsoMovimiento.getJSONObject("pongo").getInt("numberRight")));
+				cambio = true;
+				primeraFicha = false;
 				// IZQUIERDA-IZQUIERDA (vuelta)
 			} else if (jsoMovimiento.getJSONObject("pongo").getInt("numberLeft") == jsoMovimiento
 					.getJSONObject("juntoA").getInt("numberLeft")) {
@@ -239,8 +244,10 @@ public class DominoMatch extends Match {
 						jsoMovimiento.getJSONObject("pongo").getInt("numberLeft")));
 				stateplayers.removeFichas(new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberRight"),
 						jsoMovimiento.getJSONObject("pongo").getInt("numberLeft")));
+				cambio = true;
+				primeraFicha = false;
 			}
-			primeraFicha = false;
+			
 		} else if (jsoMovimiento.getJSONObject("juntoA").getBoolean("ocupadoLeft") || primeraFicha == true) {
 			// IZQUIERDA-DERECHA
 			if (jsoMovimiento.getJSONObject("pongo").getInt("numberLeft") == jsoMovimiento.getJSONObject("juntoA")
@@ -249,6 +256,8 @@ public class DominoMatch extends Match {
 						jsoMovimiento.getJSONObject("pongo").getInt("numberRight")));
 				stateplayers.removeFichas(new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberLeft"),
 						jsoMovimiento.getJSONObject("pongo").getInt("numberRight")));
+				cambio = true;
+				primeraFicha = false;
 			}
 			// DERECHA-DERECHA (vuelta)
 			else if (jsoMovimiento.getJSONObject("pongo").getInt("numberRight") == jsoMovimiento.getJSONObject("juntoA")
@@ -257,8 +266,12 @@ public class DominoMatch extends Match {
 						jsoMovimiento.getJSONObject("pongo").getInt("numberLeft")));
 				stateplayers.removeFichas(new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberLeft"),
 						jsoMovimiento.getJSONObject("pongo").getInt("numberRight")));
+				cambio = true;
+				primeraFicha = false;
 			}
-			primeraFicha = false;
 		}
+		
+		if(!cambio)
+			throw new Exception ("Movimiento invalido");
 	}
 }

@@ -96,17 +96,13 @@ function ViewModel() {
 					}
 				}
 				// ELIMINAR NUESTRA FICHA
-				var contMisFichas = 0;
+				var movRival = false;
 				for (var k=0; k<self.fichasJugador().length; k++) {
 					if ((self.fichasJugador()[k].numberLeft==ficha.numberLeft && self.fichasJugador()[k].numberRight==ficha.numberRight) || (self.fichasJugador()[k].numberRight==ficha.numberLeft && self.fichasJugador()[k].numberLeft==ficha.numberRight) ) {
 						self.fichasJugador.splice(k, 1);
-						contMisFichas++;
+						self.fichasRival.pop();
 						break;
 					}
-				}
-				// ELIMINAR LA FICHA DEL RIVAL
-				if(contMisFichas==0){
-					self.fichasRival.pop();
 				}
 			}
 			

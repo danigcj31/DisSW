@@ -87,7 +87,7 @@ public abstract class Match {
 		this.game = game;
 	}
 	
-	protected abstract void actualizarTablero(JSONObject jsoMovimiento, User usuario);
+	protected abstract void actualizarTablero(JSONObject jsoMovimiento, User usuario)throws Exception;
 
 	protected abstract User cambiarTurno();
 
