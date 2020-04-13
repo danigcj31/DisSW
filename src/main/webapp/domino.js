@@ -96,11 +96,9 @@ function ViewModel() {
 					}
 				}
 				// ELIMINAR NUESTRA FICHA
-				var movRival = false;
 				for (var k=0; k<self.fichasJugador().length; k++) {
 					if ((self.fichasJugador()[k].numberLeft==ficha.numberLeft && self.fichasJugador()[k].numberRight==ficha.numberRight) || (self.fichasJugador()[k].numberRight==ficha.numberLeft && self.fichasJugador()[k].numberLeft==ficha.numberRight) ) {
 						self.fichasJugador.splice(k, 1);
-						self.fichasRival.pop();
 						break;
 					}
 				}
@@ -122,7 +120,6 @@ function ViewModel() {
 				if(self.robarFicha() == true){
 					self.fichasJugador.push(new Ficha(fichaRobada.numberLeft, fichaRobada.numberRight));
 				}
-				
 		        
 		        self.robarFicha(false);
 		        self.mensaje(data.jugadorConElTurno + " tiene el turno.");
