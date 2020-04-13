@@ -2,7 +2,6 @@ package edu.uclm.esi.games2020.model;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
