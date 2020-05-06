@@ -90,76 +90,136 @@ public class TresEnRayaMatch extends Match {
 	protected boolean IsWinner(User player, JSONObject jsoMovimiento) {
 		Boolean winner = false;
 
-		if (IsWinnerFilas(player))
+		if (isWinnerFilas(player) || isWinnerColumnas(player) || isWinnerDiagonales(player)) {
 			winner = true;
-		else if (IsWinnerColumnas(player))
-			winner = true;
-		else if (IsWinnerDiagonales(player))
-			winner = true;
+		}
 
 		return winner;
 
 	}
 
-	private Boolean IsWinnerDiagonales(User player) {
-		boolean IsWinner = false;
+	private Boolean isWinnerDiagonales(User player) {
+		boolean isWinner = false;
 		if (player == this.players.get(0)) {
-			if (this.tablero.get(0).equals("X") && this.tablero.get(4).equals("X") && this.tablero.get(8).equals("X"))
-				IsWinner = true;
-			if (this.tablero.get(6).equals("X") && this.tablero.get(4).equals("X") && this.tablero.get(2).equals("X"))
-				IsWinner = true;
+			isWinner = comprobarDiagonalIzqDer("X");
+			if (!isWinner) {
+				isWinner = comprobarDiagonalDerIzq("X");
+			}
 
 		} else {
-			if (this.tablero.get(0).equals("O") && this.tablero.get(4).equals("O") && this.tablero.get(8).equals("O"))
-				IsWinner = true;
-			if (this.tablero.get(6).equals("O") && this.tablero.get(4).equals("O") && this.tablero.get(2).equals("O"))
-				IsWinner = true;
+			isWinner = comprobarDiagonalIzqDer("O");
+			if (!isWinner) {
+				isWinner = comprobarDiagonalDerIzq("O");
+			}
 
 		}
 
-		return IsWinner;
+		return isWinner;
 	}
 
-	private Boolean IsWinnerColumnas(User player) {
-		boolean IsWinner = false;
-		if (player == this.players.get(0)) {
-			if (this.tablero.get(0).equals("X") && this.tablero.get(3).equals("X") && this.tablero.get(6).equals("X"))
-				IsWinner = true;
-			if (this.tablero.get(1).equals("X") && this.tablero.get(4).equals("X") && this.tablero.get(7).equals("X"))
-				IsWinner = true;
-			if (this.tablero.get(2).equals("X") && this.tablero.get(5).equals("X") && this.tablero.get(8).equals("X"))
-				IsWinner = true;
-		} else {
-			if (this.tablero.get(0).equals("O") && this.tablero.get(3).equals("O") && this.tablero.get(6).equals("O"))
-				IsWinner = true;
-			if (this.tablero.get(1).equals("O") && this.tablero.get(4).equals("O") && this.tablero.get(7).equals("O"))
-				IsWinner = true;
-			if (this.tablero.get(2).equals("O") && this.tablero.get(5).equals("O") && this.tablero.get(8).equals("O"))
-				IsWinner = true;
-		}
-
-		return IsWinner;
+	private boolean comprobarDiagonalDerIzq(String ficha) {
+		boolean isWinner = false;
+		if (this.tablero.get(6).equals(ficha) && this.tablero.get(4).equals(ficha) && this.tablero.get(2).equals(ficha))
+			isWinner = true;
+		return isWinner;
 	}
 
-	private Boolean IsWinnerFilas(User player) {
-		boolean IsWinner = false;
+	private boolean comprobarDiagonalIzqDer(String ficha) {
+		boolean isWinner = false;
+		if (this.tablero.get(0).equals(ficha) && this.tablero.get(4).equals(ficha) && this.tablero.get(8).equals(ficha))
+			isWinner = true;
+		return isWinner;
+	}
+
+	private Boolean isWinnerColumnas(User player) {
+		boolean isWinner = false;
 		if (player == this.players.get(0)) {
-			if (this.tablero.get(0).equals("X") && this.tablero.get(1).equals("X") && this.tablero.get(2).equals("X"))
-				IsWinner = true;
-			if (this.tablero.get(3).equals("X") && this.tablero.get(4).equals("X") && this.tablero.get(5).equals("X"))
-				IsWinner = true;
-			if (this.tablero.get(6).equals("X") && this.tablero.get(7).equals("X") && this.tablero.get(8).equals("X"))
-				IsWinner = true;
+
+			isWinner = comprobarPrimeraColumna("X");
+			if (!isWinner) {
+				isWinner = comprobarSegundaColumna("X");
+			}
+			if (!isWinner) {
+				isWinner = comprobarTerceraColumna("X");
+			}
 		} else {
-			if (this.tablero.get(0).equals("O") && this.tablero.get(1).equals("O") && this.tablero.get(2).equals("O"))
-				IsWinner = true;
-			if (this.tablero.get(3).equals("O") && this.tablero.get(4).equals("O") && this.tablero.get(5).equals("O"))
-				IsWinner = true;
-			if (this.tablero.get(6).equals("O") && this.tablero.get(7).equals("O") && this.tablero.get(8).equals("O"))
-				IsWinner = true;
+			isWinner = comprobarPrimeraColumna("O");
+			if (!isWinner) {
+				isWinner = comprobarSegundaColumna("O");
+			}
+			if (!isWinner) {
+				isWinner = comprobarTerceraColumna("O");
+			}
 		}
 
-		return IsWinner;
+		return isWinner;
+	}
+
+	private boolean comprobarTerceraColumna(String ficha) {
+		boolean isWinner = false;
+		if (this.tablero.get(2).equals(ficha) && this.tablero.get(5).equals(ficha) && this.tablero.get(8).equals(ficha))
+			isWinner = true;
+		return isWinner;
+	}
+
+	private boolean comprobarSegundaColumna(String ficha) {
+		boolean isWinner = false;
+		if (this.tablero.get(1).equals(ficha) && this.tablero.get(4).equals(ficha) && this.tablero.get(7).equals(ficha))
+			isWinner = true;
+		return isWinner;
+	}
+
+	private boolean comprobarPrimeraColumna(String ficha) {
+		boolean isWinner = false;
+		if (this.tablero.get(0).equals(ficha) && this.tablero.get(3).equals(ficha) && this.tablero.get(6).equals(ficha))
+			isWinner = true;
+		return isWinner;
+	}
+
+	private boolean comprobarSegundaFila(String ficha) {
+		boolean isWinner = false;
+		if (this.tablero.get(3).equals(ficha) && this.tablero.get(4).equals(ficha) && this.tablero.get(5).equals(ficha))
+			isWinner = true;
+		return isWinner;
+	}
+
+	private boolean comprobarTerceraFila(String ficha) {
+		boolean isWinner = false;
+		if (this.tablero.get(6).equals(ficha) && this.tablero.get(7).equals(ficha) && this.tablero.get(8).equals(ficha))
+			isWinner = true;
+		return isWinner;
+	}
+
+	private boolean comprobarPrimeraFila(String ficha) {
+		boolean isWinner = false;
+		if (this.tablero.get(0).equals(ficha) && this.tablero.get(1).equals(ficha) && this.tablero.get(2).equals(ficha))
+			isWinner = true;
+		return isWinner;
+	}
+
+	private Boolean isWinnerFilas(User player) {
+		boolean isWinner = false;
+		if (player == this.players.get(0)) {
+			isWinner = comprobarPrimeraFila("X");
+			if (!isWinner) {
+				isWinner = comprobarSegundaFila("X");
+			}
+			if (!isWinner) {
+				isWinner = comprobarTerceraFila("X");
+			}
+
+		} else {
+			isWinner = comprobarPrimeraFila("O");
+			if (!isWinner) {
+				isWinner = comprobarSegundaFila("O");
+			}
+			if (!isWinner) {
+				isWinner = comprobarTerceraFila("O");
+			}
+
+		}
+
+		return isWinner;
 	}
 
 	@Override
@@ -205,11 +265,11 @@ public class TresEnRayaMatch extends Match {
 		jso.put("ganador", "");
 		jso.put("empate", "F");
 		for (User player : this.players)
-			if (IsWinner(player,jsoMovimiento)) {
+			if (IsWinner(player, jsoMovimiento)) {
 				jso.put("ganador", player.getUserName());
 			} else if (isDraw())
 				jso.put("empate", "T");
-		
+
 		for (User player : this.players) {
 			player.send(jso);
 		}
@@ -220,15 +280,12 @@ public class TresEnRayaMatch extends Match {
 	protected void actualizarTablero(JSONObject jsoMovimiento, User usuario) {
 
 		this.tablero.set(jsoMovimiento.getInt("ficha"), getFicha());
-		
 
 	}
 
-	
-	
 	@Override
 	protected void robar(JSONObject jsoMovimiento, User usuario) {
-		
+
 	}
 
 }

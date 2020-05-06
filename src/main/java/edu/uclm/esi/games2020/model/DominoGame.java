@@ -13,7 +13,6 @@ public class DominoGame extends Game {
 	
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return "Domino";
 	}
 }
