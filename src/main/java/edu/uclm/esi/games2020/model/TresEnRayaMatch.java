@@ -7,12 +7,15 @@ import java.util.Random;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import edu.uclm.esi.games2020.model.Match;
+
+import edu.uclm.esi.games2020.exceptions.CasillaOcupadaException;
+import edu.uclm.esi.games2020.exceptions.NoTienesElTurnoException;
 
 public class TresEnRayaMatch extends Match {
 
 	private List<String> tablero;
 	private User jugadorConElTurno;
+	private Random dado = new Random();
 
 	public TresEnRayaMatch() {
 		super();
@@ -68,7 +71,7 @@ public class TresEnRayaMatch extends Match {
 
 	@Override
 	protected User sortearTurno() {
-		Random dado = new Random();
+		
 		if (dado.nextBoolean()) {
 			this.jugadorConElTurno = players.get(0);
 		} else {
@@ -87,8 +90,8 @@ public class TresEnRayaMatch extends Match {
 		return jsa;
 	}
 
-	protected boolean IsWinner(User player, JSONObject jsoMovimiento) {
-		Boolean winner = false;
+	protected boolean isWinner(User player, JSONObject jsoMovimiento) {
+		boolean winner = false;
 
 		if (isWinnerFilas(player) || isWinnerColumnas(player) || isWinnerDiagonales(player)) {
 			winner = true;
@@ -246,14 +249,14 @@ public class TresEnRayaMatch extends Match {
 	@Override
 	protected void comprobarTurno(User usuario) throws Exception {
 		if (this.jugadorConElTurno != usuario)
-			throw new Exception("No tienes el turno");
+			throw new NoTienesElTurnoException();
 	}
 
 	@Override
 	protected void comprobarLegalidad(JSONObject jsoMovimiento, User usuario) throws Exception {
 		int posicion = jsoMovimiento.getInt("ficha");
 		if (!this.tablero.get(posicion).equals("-"))
-			throw new Exception("Casilla ocupada");
+			throw new CasillaOcupadaException();
 	}
 
 	@Override
@@ -265,10 +268,11 @@ public class TresEnRayaMatch extends Match {
 		jso.put("ganador", "");
 		jso.put("empate", "F");
 		for (User player : this.players)
-			if (IsWinner(player, jsoMovimiento)) {
+			if (isWinner(player, jsoMovimiento)) {
 				jso.put("ganador", player.getUserName());
-			} else if (isDraw())
+			} else if (isDraw()) {
 				jso.put("empate", "T");
+			}
 
 		for (User player : this.players) {
 			player.send(jso);
@@ -285,7 +289,7 @@ public class TresEnRayaMatch extends Match {
 
 	@Override
 	protected void robar(JSONObject jsoMovimiento, User usuario) {
-
+		//En este juego no se roba
 	}
 
 }

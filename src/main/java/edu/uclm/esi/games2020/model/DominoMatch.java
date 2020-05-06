@@ -8,7 +8,18 @@ import java.util.Random;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import edu.uclm.esi.games2020.exceptions.MovimientoInvalidoException;
+import edu.uclm.esi.games2020.exceptions.NoTienesElTurnoException;
+
 public class DominoMatch extends Match {
+	private static final String JUNTOA = "juntoA";
+	private static final String PONGO = "pongo";
+	private static final String OCUPADOLEFT = "ocupadoLeft";
+	private static final String OCUPADORIGHT = "ocupadoRight";
+	private static final String NUMBERLEFT = "numberLeft";
+	private static final String NUMBERRIGHT = "numberRight";
+
+	private Random dado = new Random();
 
 	private TacoFichas tacoFichas;
 	private List<FichaDomino> fichasMesa;
@@ -37,15 +48,15 @@ public class DominoMatch extends Match {
 
 	@Override
 	protected void comprobarLegalidad(JSONObject jsoMovimiento, User usuario) throws Exception {
-		if ((jsoMovimiento.getJSONObject("juntoA").getBoolean("ocupadoRight"))
-				&& (jsoMovimiento.getJSONObject("juntoA").getBoolean("ocupadoLeft")))
-			throw new Exception("Movimiento inválido");
+		if ((jsoMovimiento.getJSONObject(JUNTOA).getBoolean(OCUPADORIGHT))
+				&& (jsoMovimiento.getJSONObject(JUNTOA).getBoolean(OCUPADOLEFT)))
+			throw new MovimientoInvalidoException();
 	}
 
 	@Override
 	protected void comprobarTurno(User usuario) throws Exception {
 		if (this.jugadorConElTurno != usuario)
-			throw new Exception("No tienes el turno");
+			throw new NoTienesElTurnoException();
 	}
 
 	public int getCurrentPlayer() {
@@ -82,7 +93,7 @@ public class DominoMatch extends Match {
 	}
 
 	@Override
-	protected boolean IsWinner(User player, JSONObject jsoMovimiento) {
+	protected boolean isWinner(User player, JSONObject jsoMovimiento) {
 		boolean isWinner = false;
 		DominoState state0 = (DominoState) players.get(0).getState();
 		DominoState state1 = (DominoState) players.get(1).getState();
@@ -134,7 +145,7 @@ public class DominoMatch extends Match {
 			jso.put("fichaRobada", getFichaRobada());
 
 		for (User player : this.players)
-			if (IsWinner(player, jsoMovimiento))
+			if (isWinner(player, jsoMovimiento))
 				jso.put("ganador", player.getUserName());
 
 		for (User player : this.players) {
@@ -158,7 +169,7 @@ public class DominoMatch extends Match {
 
 	@Override
 	protected User sortearTurno() {
-		Random dado = new Random();
+
 		if (dado.nextBoolean()) {
 			this.jugadorConElTurno = players.get(0);
 		} else {
@@ -222,7 +233,7 @@ public class DominoMatch extends Match {
 		boolean primeraFicha = false;
 		DominoState stateplayers = (DominoState) usuario.getState();
 
-		primeraFicha = AñadirPrimeraFicha(jsoMovimiento, stateplayers);
+		primeraFicha = aniadirPrimeraFicha(jsoMovimiento, stateplayers);
 
 		if (!primeraFicha) {
 			soloUnaFicha = comprobarSiSoloHayUnaFicha(jsoMovimiento);
@@ -233,28 +244,28 @@ public class DominoMatch extends Match {
 		}
 
 		if (!fichaPuesta && !primeraFicha)
-			throw new Exception("Movimiento invalido");
+			throw new MovimientoInvalidoException();
 	}
 
 	private boolean posibilidadDer(JSONObject jsoMovimiento, DominoState stateplayers, boolean soloUnaFicha) {
-		if (jsoMovimiento.getJSONObject("juntoA").getBoolean("ocupadoLeft") || soloUnaFicha) {
+		if (jsoMovimiento.getJSONObject(JUNTOA).getBoolean(OCUPADOLEFT) || soloUnaFicha) {
 			// IZQUIERDA-DERECHA
-			if (jsoMovimiento.getJSONObject("pongo").getInt("numberLeft") == jsoMovimiento.getJSONObject("juntoA")
-					.getInt("numberRight")) {
-				this.tableroDomino.add(new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberLeft"),
-						jsoMovimiento.getJSONObject("pongo").getInt("numberRight")));
-				stateplayers.removeFichas(new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberLeft"),
-						jsoMovimiento.getJSONObject("pongo").getInt("numberRight")));
+			if (jsoMovimiento.getJSONObject(PONGO).getInt(NUMBERLEFT) == jsoMovimiento.getJSONObject(JUNTOA)
+					.getInt(NUMBERRIGHT)) {
+				this.tableroDomino.add(new FichaDomino(jsoMovimiento.getJSONObject(PONGO).getInt(NUMBERLEFT),
+						jsoMovimiento.getJSONObject(PONGO).getInt(NUMBERRIGHT)));
+				stateplayers.removeFichas(new FichaDomino(jsoMovimiento.getJSONObject(PONGO).getInt(NUMBERLEFT),
+						jsoMovimiento.getJSONObject(PONGO).getInt(NUMBERRIGHT)));
 				return true;
 
 			}
 			// DERECHA-DERECHA (vuelta)
-			else if (jsoMovimiento.getJSONObject("pongo").getInt("numberRight") == jsoMovimiento.getJSONObject("juntoA")
-					.getInt("numberRight")) {
-				this.tableroDomino.add(new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberRight"),
-						jsoMovimiento.getJSONObject("pongo").getInt("numberLeft")));
-				stateplayers.removeFichas(new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberLeft"),
-						jsoMovimiento.getJSONObject("pongo").getInt("numberRight")));
+			else if (jsoMovimiento.getJSONObject(PONGO).getInt(NUMBERRIGHT) == jsoMovimiento.getJSONObject(JUNTOA)
+					.getInt(NUMBERRIGHT)) {
+				this.tableroDomino.add(new FichaDomino(jsoMovimiento.getJSONObject(PONGO).getInt(NUMBERRIGHT),
+						jsoMovimiento.getJSONObject(PONGO).getInt(NUMBERLEFT)));
+				stateplayers.removeFichas(new FichaDomino(jsoMovimiento.getJSONObject(PONGO).getInt(NUMBERLEFT),
+						jsoMovimiento.getJSONObject(PONGO).getInt(NUMBERRIGHT)));
 				return true;
 
 			}
@@ -264,23 +275,23 @@ public class DominoMatch extends Match {
 	}
 
 	private boolean posibilidadIzq(JSONObject jsoMovimiento, DominoState stateplayers, boolean soloUnaFicha) {
-		if (jsoMovimiento.getJSONObject("juntoA").getBoolean("ocupadoRight") || soloUnaFicha) { // PARA
+		if (jsoMovimiento.getJSONObject(JUNTOA).getBoolean(OCUPADORIGHT) || soloUnaFicha) { // PARA
 			// DERECHA-IZQUIERDA
-			if (jsoMovimiento.getJSONObject("pongo").getInt("numberRight") == jsoMovimiento.getJSONObject("juntoA")
-					.getInt("numberLeft")) {
-				this.tableroDomino.add(0, new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberLeft"),
-						jsoMovimiento.getJSONObject("pongo").getInt("numberRight")));
-				stateplayers.removeFichas(new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberLeft"),
-						jsoMovimiento.getJSONObject("pongo").getInt("numberRight")));
+			if (jsoMovimiento.getJSONObject(PONGO).getInt(NUMBERRIGHT) == jsoMovimiento.getJSONObject(JUNTOA)
+					.getInt(NUMBERLEFT)) {
+				this.tableroDomino.add(0, new FichaDomino(jsoMovimiento.getJSONObject(PONGO).getInt(NUMBERLEFT),
+						jsoMovimiento.getJSONObject(PONGO).getInt(NUMBERRIGHT)));
+				stateplayers.removeFichas(new FichaDomino(jsoMovimiento.getJSONObject(PONGO).getInt(NUMBERLEFT),
+						jsoMovimiento.getJSONObject(PONGO).getInt(NUMBERRIGHT)));
 				return true;
 
 				// IZQUIERDA-IZQUIERDA (vuelta)
-			} else if (jsoMovimiento.getJSONObject("pongo").getInt("numberLeft") == jsoMovimiento
-					.getJSONObject("juntoA").getInt("numberLeft")) {
-				this.tableroDomino.add(0, new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberRight"),
-						jsoMovimiento.getJSONObject("pongo").getInt("numberLeft")));
-				stateplayers.removeFichas(new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberRight"),
-						jsoMovimiento.getJSONObject("pongo").getInt("numberLeft")));
+			} else if (jsoMovimiento.getJSONObject(PONGO).getInt(NUMBERLEFT) == jsoMovimiento.getJSONObject(JUNTOA)
+					.getInt(NUMBERLEFT)) {
+				this.tableroDomino.add(0, new FichaDomino(jsoMovimiento.getJSONObject(PONGO).getInt(NUMBERRIGHT),
+						jsoMovimiento.getJSONObject(PONGO).getInt(NUMBERLEFT)));
+				stateplayers.removeFichas(new FichaDomino(jsoMovimiento.getJSONObject(PONGO).getInt(NUMBERRIGHT),
+						jsoMovimiento.getJSONObject(PONGO).getInt(NUMBERLEFT)));
 				return true;
 
 			}
@@ -290,15 +301,15 @@ public class DominoMatch extends Match {
 
 	}
 
-	private boolean AñadirPrimeraFicha(JSONObject jsoMovimiento, DominoState stateplayers) {
-		if (jsoMovimiento.getJSONObject("pongo").getInt("numberLeft") == jsoMovimiento.getJSONObject("juntoA")
-				.getInt("numberLeft")
-				&& jsoMovimiento.getJSONObject("pongo").getInt("numberRight") == jsoMovimiento.getJSONObject("juntoA")
-						.getInt("numberRight")) {
-			this.tableroDomino.add(new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberLeft"),
-					jsoMovimiento.getJSONObject("pongo").getInt("numberRight")));
-			stateplayers.removeFichas(new FichaDomino(jsoMovimiento.getJSONObject("pongo").getInt("numberLeft"),
-					jsoMovimiento.getJSONObject("pongo").getInt("numberRight")));
+	private boolean aniadirPrimeraFicha(JSONObject jsoMovimiento, DominoState stateplayers) {
+		if (jsoMovimiento.getJSONObject(PONGO).getInt(NUMBERLEFT) == jsoMovimiento.getJSONObject(JUNTOA)
+				.getInt(NUMBERLEFT)
+				&& jsoMovimiento.getJSONObject(PONGO).getInt(NUMBERRIGHT) == jsoMovimiento.getJSONObject(JUNTOA)
+						.getInt(NUMBERRIGHT)) {
+			this.tableroDomino.add(new FichaDomino(jsoMovimiento.getJSONObject(PONGO).getInt(NUMBERLEFT),
+					jsoMovimiento.getJSONObject(PONGO).getInt(NUMBERRIGHT)));
+			stateplayers.removeFichas(new FichaDomino(jsoMovimiento.getJSONObject(PONGO).getInt(NUMBERLEFT),
+					jsoMovimiento.getJSONObject(PONGO).getInt(NUMBERRIGHT)));
 			return true;
 		}
 		return false;
@@ -306,12 +317,13 @@ public class DominoMatch extends Match {
 	}
 
 	private boolean comprobarSiSoloHayUnaFicha(JSONObject jsoMovimiento) {
-		if (!jsoMovimiento.getJSONObject("juntoA").getBoolean("ocupadoRight")
-				&& !jsoMovimiento.getJSONObject("juntoA").getBoolean("ocupadoLeft")) {
-			return true;
-		} else {
-			return false;
+		boolean retorno = false;
+		if (!jsoMovimiento.getJSONObject(JUNTOA).getBoolean(OCUPADORIGHT)
+				&& !jsoMovimiento.getJSONObject(JUNTOA).getBoolean(OCUPADOLEFT)) {
+			retorno = true;
 		}
+		return retorno;
+
 	}
 
 }

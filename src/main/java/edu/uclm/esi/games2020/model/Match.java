@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.web.socket.WebSocketSession;
+
 
 public abstract class Match {
 	protected List<User> players;
@@ -73,7 +73,7 @@ public abstract class Match {
 		return jso;
 	}
 
-	public void playerReady(WebSocketSession session) {
+	public void playerReady() {
 		++readyPlayers;
 	}
 
@@ -97,7 +97,7 @@ public abstract class Match {
 
 	protected abstract boolean isDraw();
 	
-	protected abstract boolean IsWinner(User player,JSONObject jsoMovimiento);
+	protected abstract boolean isWinner(User player,JSONObject jsoMovimiento);
 	
 	protected abstract void notificarAClientes(JSONObject jsoMovimiento) throws IOException;
 

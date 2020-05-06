@@ -19,7 +19,7 @@ public class SpringWebSocket extends TextWebSocketHandler {
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-		System.out.println("Se ha conectado " + session.getId());
+		
 		HttpHeaders headers = session.getHandshakeHeaders();
 		List<String> cookies = headers.get("cookie");
 		for (String cookie : cookies)
@@ -36,7 +36,7 @@ public class SpringWebSocket extends TextWebSocketHandler {
 	public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
 		JSONObject jso = new JSONObject(message.getPayload().toString());
 		if (jso.getString("type").equals("ready")) {
-			Manager.get().playerReady(jso.getString("idMatch"), session);
+			Manager.get().playerReady(jso.getString("idMatch"));
 		} else if (jso.getString("type").equals("movimiento")) {
 			User usuario = users.get(session.getId());
 			try {

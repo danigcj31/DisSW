@@ -22,6 +22,7 @@ import edu.uclm.esi.games2020.model.User;
 
 @RestController
 public class Controller {
+	private static final String MATCH = "match";
 	@PostMapping("/login")
 	public void login(HttpSession session, @RequestBody Map<String, Object> credenciales) throws Exception {
 		JSONObject jso = new JSONObject(credenciales);
@@ -43,7 +44,7 @@ public class Controller {
 	}
 
 	@GetMapping("/getGames")
-	public JSONArray getGames(HttpSession session) throws Exception {
+	public JSONArray getGames(HttpSession session) throws Exception{
 		return Manager.get().getGames();
 	}
 
@@ -58,8 +59,8 @@ public class Controller {
 			String game = jso.getString("game");
 			Match match = Manager.get().joinToMatch(user, game);
 			HashMap<String, Object> resultado = new HashMap<>();
-			resultado.put("type", "match");
-			resultado.put("match", match);
+			resultado.put("type", MATCH);
+			resultado.put(MATCH, match);
 			return resultado;
 		}
 	}
@@ -75,8 +76,8 @@ public class Controller {
 			String game = jso.getString("game");
 			Match match = Manager.get().joinToMatch(user, game);
 			JSONObject resultado = new JSONObject();
-			resultado.put("type", "match");
-			resultado.put("match", match.toJSON());
+			resultado.put("type", MATCH);
+			resultado.put(MATCH, match.toJSON());
 			resultado.put("juego", game);
 			return resultado.toString();
 		}

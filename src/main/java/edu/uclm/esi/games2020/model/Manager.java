@@ -1,7 +1,6 @@
 package edu.uclm.esi.games2020.model;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -12,9 +11,8 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.WebSocketSession;
-
 import edu.uclm.esi.games2020.dao.UserDAO;
+import edu.uclm.esi.games2020.exceptions.CredencialesInvalidasException;
 
 @Component
 public class Manager {
@@ -68,17 +66,14 @@ public class Manager {
 	}
 	
 	public User login(HttpSession httpSession, String userName, String pwd) throws Exception {
-		try {
-			User user = userDAO.findById(userName).get();
-			if (user.getPwd().equals(pwd)) {
-				user.setHttpSession(httpSession);
-				this.connectedUsersByUserName.put(userName, user);
-				this.connectedUsersByHttpSession.put(httpSession.getId(), user);
-				return user;
-			} else
-				throw new Exception("Credenciales inválidas");
-		} catch (SQLException e) {
-			throw new Exception("Credenciales inválidas");
+		User user = userDAO.findById(userName).get();
+		if (user.getPwd().equals(pwd)) {
+			user.setHttpSession(httpSession);
+			this.connectedUsersByUserName.put(userName, user);
+			this.connectedUsersByHttpSession.put(httpSession.getId(), user);
+			return user;
+		} else {
+			throw new CredencialesInvalidasException();
 		}
 	}
 	
@@ -97,9 +92,9 @@ public class Manager {
 		
 	}
 	
-	public void playerReady(String idMatch, WebSocketSession session) throws IOException {
+	public void playerReady(String idMatch) throws IOException {
 		Match match = this.pendingMatches.get(idMatch);
-		match.playerReady(session);
+		match.playerReady();
 		if (match.ready()) {
 			this.pendingMatches.remove(idMatch);
 			this.inPlayMatches.put(idMatch, match);
@@ -107,7 +102,7 @@ public class Manager {
 		}
 	}
 
-	public void register(String email, String userName, String pwd) throws Exception {
+	public void register(String email, String userName, String pwd){
 		User user = new User();
 		user.setEmail(email);
 		user.setUserName(userName);
