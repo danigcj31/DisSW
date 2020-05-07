@@ -18,7 +18,7 @@ public class User implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private int creditCard;
+	private String creditCard;
 	
 
 	
@@ -28,13 +28,13 @@ public class User implements Serializable{
 	private String email;
 	private String pwd;
 	@Transient
-	private WebSocketSession session;
+	private transient WebSocketSession session;
 	@Transient
 	private boolean turno;
 	@Transient
 	private IState state;
 	@Transient
-	private HttpSession httpSession;
+	private transient HttpSession httpSession;
 
 	public void send(JSONObject json) throws IOException {
 		this.session.sendMessage(new TextMessage(json.toString()));		
@@ -45,7 +45,7 @@ public class User implements Serializable{
 	}
 	
 	//GETTERS
-	public int getCreditCard() {
+	public String getCreditCard() {
 		return creditCard;
 	}
 	public String getEmail() {
@@ -72,7 +72,7 @@ public class User implements Serializable{
 		return userName;
 	}
 	//SETTERS
-	public void setCreditCard(int creditCard) {
+	public void setCreditCard(String creditCard) {
 		this.creditCard = creditCard;
 	}
 	public void setEmail(String email) {

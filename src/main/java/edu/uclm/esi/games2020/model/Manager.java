@@ -1,7 +1,11 @@
 package edu.uclm.esi.games2020.model;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpSession;
@@ -66,15 +70,20 @@ public class Manager {
 	}
 	
 	public User login(HttpSession httpSession, String userName, String pwd) throws Exception {
-		User user = userDAO.findById(userName).get();
-		if (user.getPwd().equals(pwd)) {
-			user.setHttpSession(httpSession);
-			this.connectedUsersByUserName.put(userName, user);
-			this.connectedUsersByHttpSession.put(httpSession.getId(), user);
-			return user;
-		} else {
-			throw new CredencialesInvalidasException();
-		}
+		Optional<User> optUser = userDAO.findById(userName);
+		if (optUser.isPresent()) {
+			User user = optUser.get();
+			String pwdEncrypted = user.getPwd();
+			String pwdUsuario = encriptarMD5(pwd);
+			if (pwdEncrypted.equals(pwdUsuario)) {
+				user.setHttpSession(httpSession);
+				this.connectedUsersByUserName.put(userName, user);
+				this.connectedUsersByHttpSession.put(httpSession.getId(), user);
+				return user;
+			} else {
+				throw new CredencialesInvalidasException();
+			}
+		} else throw new CredencialesInvalidasException();
 	}
 	
 	public void logout(User user) {
@@ -102,12 +111,30 @@ public class Manager {
 		}
 	}
 
-	public void register(String email, String userName, String pwd, int creditCard){
+	public void register(String email, String userName, String pwd, String creditCard){
 		User user = new User();
 		user.setEmail(email);
 		user.setUserName(userName);
-		user.setPwd(pwd);
-		user.setCreditCard(creditCard);
+		user.setPwd(encriptarMD5(pwd));
+		
+		user.setCreditCard(encriptarMD5(creditCard));
 		userDAO.save(user);
+	}
+	
+	private String encriptarMD5(String input){
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			byte[] messageDigest = md.digest(input.getBytes());
+			BigInteger number = new BigInteger(1, messageDigest);
+			String hashtext = number.toString(16);
+
+			while (hashtext.length() < 32) {
+				hashtext = "0" + hashtext;
+			}
+			return hashtext;
+			}
+		catch (NoSuchAlgorithmException e) {
+			 throw new RuntimeException(e);
+		}
 	}
 }
