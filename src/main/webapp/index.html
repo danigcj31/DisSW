@@ -55,6 +55,7 @@
 					<input type="text" placeholder="user name" id="registroUserName"><br>
 					<input type="password" placeholder="password" id="pwd1"><br>
 					<input type="password" placeholder="repeat your password" id="pwd2"><br>
+					<input type="number" placeholder="credit card" id="creditCard"><br>
 					<button onclick="register()" id="registroBtn">Register</button><br>
 				</div>
 				<div id="divSeleccionDeJuego" style="display:none">
@@ -107,7 +108,8 @@ function register() {
 		userName : registroUserName.value,
 		email : registroEmail.value,
 		pwd1 : pwd1.value,
-		pwd2 : pwd2.value
+		pwd2 : pwd2.value,
+		creditCard : creditCard.value
 	};
 	var data = {
 			data : JSON.stringify(info),

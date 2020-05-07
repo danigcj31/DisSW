@@ -39,8 +39,9 @@ public class Controller {
 		String email = jso.getString("email");
 		String pwd1 = jso.getString("pwd1");
 		String pwd2 = jso.getString("pwd2");
+		int creditCard = jso.getInt("creditCard");
 		if (pwd1.equals(pwd2))
-			Manager.get().register(email, userName, pwd1);
+			Manager.get().register(email, userName, pwd1, creditCard);
 	}
 
 	@GetMapping("/getGames")

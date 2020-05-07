@@ -102,11 +102,12 @@ public class Manager {
 		}
 	}
 
-	public void register(String email, String userName, String pwd){
+	public void register(String email, String userName, String pwd, int creditCard){
 		User user = new User();
 		user.setEmail(email);
 		user.setUserName(userName);
 		user.setPwd(pwd);
+		user.setCreditCard(creditCard);
 		userDAO.save(user);
 	}
 }

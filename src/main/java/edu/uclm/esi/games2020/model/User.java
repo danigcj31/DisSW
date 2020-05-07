@@ -18,6 +18,11 @@ public class User implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private int creditCard;
+	
+
+	
+
 	@Id
 	private String userName;
 	private String email;
@@ -40,6 +45,9 @@ public class User implements Serializable{
 	}
 	
 	//GETTERS
+	public int getCreditCard() {
+		return creditCard;
+	}
 	public String getEmail() {
 		return email;
 	}
@@ -64,6 +72,9 @@ public class User implements Serializable{
 		return userName;
 	}
 	//SETTERS
+	public void setCreditCard(int creditCard) {
+		this.creditCard = creditCard;
+	}
 	public void setEmail(String email) {
 		this.email = email;
 	}
